@@ -54,7 +54,7 @@ data_exclude <- data0 |>
 
 exclusion_wave4_IDs <- data_exclude$id |>  unique() |>  as.data.frame()
 colnames(exclusion_wave4_IDs) <- "id"
-write.csv(exclusion_wave4_IDs, "exclusion-part4-IDs.csv", row.names = FALSE)
+write.csv(exclusion_wave4_IDs, "exclusion_part4_IDs.csv", row.names = FALSE)
 
 # clean the data from formal test trials  ---------------------------------
 # OSPAN data ------------------
