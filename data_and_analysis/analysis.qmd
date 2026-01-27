@@ -1,0 +1,491 @@
+---
+title: "Analysis"
+author: "Xiaotong Liu"
+editor: visual
+format:
+  html:
+    toc: true
+---
+
+R preparation
+
+```{r R preparation}
+#| echo: true
+
+if (!requireNamespace("pacman", quietly = TRUE)) { 
+  install.packages("pacman")
+} 
+library("pacman")
+p_load(tidyverse, here, GGally, ppcor, lme4)
+
+## read-in data 
+df_noise_conjdisj <- read.csv(here::here("data_and_analysis", "data",
+                                         "part2_estimation_task",
+                                         "noise_conj_disj.csv"))
+ #155 participants 
+
+df_ranking <- read.csv(here::here("data_and_analysis", "data",
+                                  "part3_ranking_task", 
+                                  "result_ranking.csv")) |> 
+  filter(id %in% df_noise_conjdisj$id) #143 participants 
+
+df_OSPAN <- read.csv(here::here("data_and_analysis", "data",
+                                "part4_WMC_Gf",
+                                "df_part4_OSPAN.csv")) |> 
+  filter(id %in% df_ranking$id) #87 participants 
+
+df_SSPAN <- read.csv(here::here("data_and_analysis", "data", 
+                                "part4_WMC_Gf", 
+                                "df_part4_SSPAN.csv")) |>  
+  filter(id %in% df_ranking$id) #87 participants
+
+#df_RSPAN <- read.csv(here::here("data", "part4_WMC_Gf", 
+#                          "df_part4_RSPAN.csv")) |>  
+#  filter(id %in% df_ranking$id)  #87 participants 
+###we decided to not use the RSPAN scores
+
+df_HMT <- read.csv(here::here("data_and_analysis", "data", 
+                              "part4_WMC_Gf", 
+                              "df_HMT.csv")) |>  
+  dplyr::select(id, HMT_score = no_correct) |>  
+  dplyr::filter(id %in% df_ranking$id)
+
+#creating a sub-directory for saving the plots 
+plots_dir <- file.path(getwd(), "plots")
+if (!dir.exists(plots_dir)) dir.create(plots_dir, recursive = TRUE)
+```
+
+data exclusion ：
+
+```{r}
+#part 2: excluding 2 participants who always responded 100\% or 90\%. 
+exclusion_noise <-read.csv(here::here("data_and_analysis", "data",
+                                      "part2_estimation_task",
+                                      "exclusion_part2_IDs.csv"
+))
+
+df_noise_conjdisj <- df_noise_conjdisj |> 
+  filter(! id %in% exclusion_noise$id) #153 participants 
+
+#part 3: excluding 8 (who translated German to English when performing the experiment) 
+# + 8(who failed the comprehension check question) = 16 participants
+exclusion_ranking <- read.csv(here::here("data_and_analysis",
+                                         "data", "part3_ranking_task", 
+                                   "exclusion_part3_IDs.csv"))
+
+df_ranking <- df_ranking |> filter(! id %in% exclusion_ranking$id) |> 
+  filter(id %in% df_noise_conjdisj$id) #125 participants
+
+#part 4: excluding 2 participants, one was excluded for translating German to English when performing the experiment, another for starting the experiment mutiple times 
+exclusion_WMGf <- read.csv(here::here("data_and_analysis", "data",
+                                      "part4_WMC_Gf", 
+                                      "exclusion_part4_IDs.csv"))
+
+df_OSPAN <- df_OSPAN |> filter(! id %in% exclusion_WMGf$id) 
+df_SSPAN <- df_SSPAN |> filter(! id %in% exclusion_WMGf$id)
+
+WMC_result <- df_OSPAN |> 
+  full_join(df_SSPAN, by = c("id", "splength")) #85 participants 
+
+#excluding 9 participants, who did not meet the processing-task accuracy criterion (at least 85%) in both the operation and symmetry span322
+WMC_result <- WMC_result  |>  
+  group_by(id)  |>  
+  fill(OSPAN_processing, SSPAN_processing, .direction = "updown")  |> 
+  mutate(OSPAN_pass = ifelse(OSPAN_processing >= 0.85, 1, 0),
+         SSPAN_pass = ifelse(SSPAN_processing >= 0.85, 1, 0)) |> 
+  filter(OSPAN_pass == 1 & SSPAN_pass == 1 )
+
+WMC_result <- WMC_result |> 
+  filter(id %in% df_ranking$id) #69 participants 
+
+df_HMT <- df_HMT |>
+  filter(id %in% WMC_result$id) #69 participants
+```
+
+**Robustness check of the results:**
+
+## Research Question 1
+
+Association between the estiamted noise, number of illogical rankings, and additionally the count of conjunction and disjunction fallacies
+
+**Visualization**:
+
+```{r}
+# prepare the dataset for the plot 
+df_ranking_aggregated <- df_ranking |>  
+  group_by(id) |>
+  mutate(sum_illogical = sum(logical_pass))  |>  #the number of trials where the responses were illogical
+  dplyr::select(id, sum_illogical, get_logic) |>  
+  unique()
+
+aggregated_noise_illogical <- df_ranking_aggregated |> 
+  left_join(df_noise_conjdisj, by = "id") |>
+  drop_na() |> 
+  dplyr::select(id,
+         d_average,  
+         #number_conj,
+         #number_disj,
+         sum_illogical,
+         number_conj_disj,
+         get_logic) #125 participants 
+```
+
+```{r}
+#| label: ggpairs-noise-ranking-conjdisj
+#| fig-width: 6.4
+#| fig-height: 6.4
+#| fig-cap: "Pairwise plots for the estimated noise parameter, the number of illogical rankings, and the count of conjunction and disjunction fallacies (data from Parts 2 and 3) "
+
+#plot
+custom_labels <- c(
+  "Estimated\nNoise Parameter",
+   "Number of\nIllogical Rankings", 
+  "Count of Conjunction\nand Disjunction Fallacies"
+)
+
+lower_lm <- function(data, mapping,
+                     se = TRUE, level = 0.95, linewidth = 1,
+                     fullrange = TRUE) {
+  ggplot(data = data, mapping = mapping) +
+    geom_point(alpha = 0.8, size = 1) +
+    geom_smooth(method = "lm",
+                se = se, level = level,
+                linewidth = linewidth, fullrange = fullrange,
+                color = "#2297E6" ) 
+}
+
+( p1 <- ggpairs(
+  aggregated_noise_illogical,
+  columns = 2:4,
+  columnLabels = custom_labels,
+   upper = list(continuous = wrap("cor", size = 5, digits = 2)),
+  lower = list(continuous = wrap(lower_lm,
+                                 se = TRUE, level = 0.95, linewidth = 1)),
+  diag  = list(continuous = "densityDiag")
+) +
+  theme_bw(base_size = 14) ) 
+
+#save the plot
+ggsave(
+  filename = file.path(plots_dir, "noise_ranking_conjdisj.pdf"),
+  plot = p1,
+  width = 6.4, height = 6.4
+)
+```
+
+Statistical modelling:
+
+**Pearson correlation** between the estimate noise and the number of illogical rankings:
+
+```{r}
+cor.test(aggregated_noise_illogical$d_average, 
+         aggregated_noise_illogical$sum_illogical,
+                method = "pearson",         
+                conf.level = 0.95)
+```
+
+**Pearson correlation** between the estimated noise and the count of disjunction and conjunction fallacies:
+
+```{r}
+cor.test(aggregated_noise_illogical$d_average, 
+aggregated_noise_illogical$number_conj_disj,
+                method = "pearson",         
+                conf.level = 0.95)
+```
+
+**Pearson correlation** between the number of illogical rankings and the count of disjunction and conjunction fallacies:
+
+```{r}
+cor.test(aggregated_noise_illogical$sum_illogical, 
+aggregated_noise_illogical$number_conj_disj,
+                method = "pearson",         
+                conf.level = 0.95)
+
+```
+
+**Partial correlation** between the estimated noise parameter and the number of illogical rankings, controlling for the count of conjunction and disjunction fallacies:
+
+```{r}
+pc <- pcor.test(aggregated_noise_illogical[,"d_average"], aggregated_noise_illogical[,"sum_illogical"], aggregated_noise_illogical[,"number_conj_disj"], method = "pearson")
+pc
+```
+
+95% confidence interval:
+
+```{r}
+r  <- as.numeric(pc$estimate)
+n  <- pc$n
+k  <- pc$gp                    # number of control vars
+se <- 1 / sqrt(n - k - 3)      # Fisher z SE
+z  <- atanh(r)
+zcrit <- qnorm(0.975)
+ci <- tanh(c(z - zcrit*se, z + zcrit*se))
+ci
+```
+
+**Partial correlation** between the number of illogical rankings and the count of conjunction and disjunction fallacies, controlling for the estimated noise parameter
+
+```{r}
+pc2 <- pcor.test(aggregated_noise_illogical[,"number_conj_disj"], aggregated_noise_illogical[,"sum_illogical"], 
+                 aggregated_noise_illogical[,"d_average"], method = "pearson")
+pc2
+```
+
+95% confidence interval:
+
+```{r}
+r2  <- as.numeric(pc2$estimate)
+n2  <- pc2$n
+k2  <- pc2$gp                    # number of control vars
+se2 <- 1 / sqrt(n2 - k2 - 3)      # Fisher z SE
+z2  <- atanh(r2)
+zcrit2 <- qnorm(0.975)
+ci2 <- tanh(c(z2 - zcrit2*se2, z2 + zcrit2*se2))
+ci2
+
+```
+
+**GLMM (logit link function; family: binomial) predicting the probability of logical rankings** with predictors: event-set type, the estimated noise parameter (the interaction between the event-set type and the estimated noise parameter, the trial number, as well as the logic rule question)
+
+```{r}
+#prepare the dataset for GLMMs
+noise_illogical_by_trials <- df_ranking  |>  
+  left_join(df_noise_conjdisj, by = "id")  |> 
+  dplyr::select(id, f00, condition, logical_pass, 
+                d_average, number_conj_disj, get_logic) #125 participants 
+
+```
+
+predictors: noise, event-set type
+
+```{r}
+str(noise_illogical_by_trials)
+options(contrasts = c("contr.treatment", "contr.poly"))
+
+glmm_condition_noise <- glmer(logical_pass ~ condition + d_average + 
+                                           (1 + condition|id),
+                     data = noise_illogical_by_trials,
+                     family = binomial(link = "logit"))
+
+summary(glmm_condition_noise)
+
+
+```
+
+predictors: noise, event-set type, and their interactions
+
+```{r}
+options(contrasts = c("contr.treatment", "contr.poly"))
+
+glmm_condition_noise_interaction <- glmer(logical_pass ~ condition + d_average + 
+                                            condition*d_average +
+                                           (1 + condition|id),
+                     data = noise_illogical_by_trials,
+                     family = binomial(link = "logit"))
+
+summary(glmm_condition_noise_interaction)
+```
+
+predictors: noise, event-set type, f00(number of trials), if participants answered logic question correct or not (get_logical = 1, if the participant answered the question correctly)
+
+```{r}
+options(contrasts = c("contr.treatment", "contr.poly"))
+
+glmm_condition_noise_logicQ_f00 <- glmer(logical_pass ~ condition + d_average + 
+                                             get_logic + f00 +
+                                           (1 + condition |id),
+                     data = noise_illogical_by_trials,
+                     family = binomial(link = "logit"))
+summary(glmm_condition_noise_logicQ_f00)
+```
+
+## Research Question 2
+
+Can noise predict illogical rankings independently of working memory capacity (WMC) and fluid intelligence (Gf)?
+
+**Visualization:**
+
+```{r}
+#prepare the dataset for the plot 
+WMC_HMT <- WMC_result |> 
+  group_by(id) |> 
+  mutate(OSPAN_total = sum(OSPAN_partial_credit, na.rm = TRUE),
+         SSPAN_total = sum(SSPAN_partial_credit, na.rm = TRUE)) |> 
+  dplyr::select(id, OSPAN_total, SSPAN_total) |> 
+  unique() |> 
+  mutate(WMC_composite = OSPAN_total + SSPAN_total) |> 
+  left_join(df_HMT, by = "id")
+
+noise_illogical_WMC_Gf_aggregated <- aggregated_noise_illogical  |>  
+  left_join(WMC_HMT , by = "id")  |> 
+  dplyr::select(id, d_average, WMC_composite, HMT_score, sum_illogical, get_logic, number_conj_disj) |> 
+  drop_na() #69 participants 
+```
+
+```{r}
+#| label: ggpairs-noise-ranking-WMC-Gf
+#| fig-width: 7
+#| fig-height: 7
+#| fig-cap: "Pairwise plots for the estimated noise parameter, WMC score, Gf score and the number of illogical rankings (data from Parts 2, 3 and 4) "
+
+#plot 
+custom_labels_noise_illogical_WMC <- c(
+   "Estimated\nNoise Parameter",
+    "WMC",
+   "Gf",
+   "Number of\nIllogical Rankings"
+   # "Number of Conjunction\nand Disjunction Errors"
+ )
+
+( p2 <- ggpairs(
+  noise_illogical_WMC_Gf_aggregated, columns = 2:5,
+  columnLabels = custom_labels_noise_illogical_WMC,
+  upper = list(continuous = wrap("cor", size = 4, digits = 2)),
+  lower = list(continuous = wrap(lower_lm, se = TRUE, level = 0.95, linewidth = 1)),
+  diag  = list(continuous = "densityDiag")
+) + 
+  theme_bw(base_size = 14) )
+
+#save the plot
+ggsave(
+  filename = file.path(plots_dir, "noise_illogical_Gf_WMC.pdf"),
+  plot = p2,
+  width = 7, height = 7
+)
+```
+
+**Pearson correlation** between the number of illogical rankings and Gf score(HMT_score; the score for the HMT task)
+
+```{r}
+cor.test(noise_illogical_WMC_Gf_aggregated$HMT_score, noise_illogical_WMC_Gf_aggregated$sum_illogical,
+                method = "pearson",          
+                conf.level = 0.95)
+```
+
+**Pearson correlation** between the number of illogical rankings and WMC score
+
+```{r}
+cor.test(noise_illogical_WMC_Gf_aggregated$WMC_composite, noise_illogical_WMC_Gf_aggregated$sum_illogical,
+         method = "pearson",
+         conf.level = 0.95)
+```
+
+**Pearson correlation** between the estimated noise parameter and WMC score
+
+```{r}
+cor.test(noise_illogical_WMC_Gf_aggregated$d_average, noise_illogical_WMC_Gf_aggregated$WMC_composite,
+         method = "pearson",
+         conf.level = 0.95)
+```
+
+**Pearson correlation** between the estimated noise parameter and Gf score
+
+```{r}
+cor.test(noise_illogical_WMC_Gf_aggregated$d_average, noise_illogical_WMC_Gf_aggregated$HMT_score,
+         method = "pearson",
+         conf.level = 0.95)
+```
+
+**GLMM (logit link function; family: binomial) predicting the probability of logical rankings** with predictors: event-set type, the estimated noise parameter, WMC score and Gf score.
+
+```{r}
+#prepare the dataset for GLMMs
+noise_illogical_HMT_WMC_trials <- df_ranking |>  
+  dplyr::select(id, f00, condition, logical_pass, get_logic) |> 
+  left_join(WMC_HMT, by = "id") |> 
+  left_join(df_noise_conjdisj, by = "id") |>
+  dplyr::select(id, f00, condition, logical_pass, get_logic, WMC_composite, HMT_score, d_average) |> 
+    drop_na() #69 participants 
+
+```
+
+predictors: event-set type (condition), noise (d_average), WMC score (WMC_composite), Gf score (HMT_score)
+
+```{r}
+glmm_condtion_noise_WMC_Gf <- glmer(logical_pass ~ condition + d_average + 
+                         WMC_composite + HMT_score +
+                       (1 + condition |id),
+                     data = noise_illogical_HMT_WMC_trials,
+                     family = binomial(link = "logit"),
+                     control = glmerControl(optimizer="bobyqa",
+                                   optCtrl=list(maxfun=1e5)))
+summary(glmm_condtion_noise_WMC_Gf)
+```
+
+Predictors: event-set type (condition), noise (d_average), WMC score (WMC_composite), Gf score (HMT_score), interaction between condition and WMC score, interaction between condition and Gf score
+
+```{r}
+glmm_condtion_noise_WMC_Gf_interactions <- glmer(logical_pass ~ condition + d_average + 
+                         WMC_composite + HMT_score + 
+                         condition*d_average + condition*HMT_score + condition*WMC_composite +
+                        (1 + condition |id),
+                     data = noise_illogical_HMT_WMC_trials,
+                     family = binomial(link = "logit"),
+                     control = glmerControl(optimizer="bobyqa",
+                                   optCtrl=list(maxfun=1e5)))
+
+summary(glmm_condtion_noise_WMC_Gf_interactions)
+```
+
+**Z-transform continuous predictors for the ease of interpretation:**
+
+```{r}
+#prepare the dataset:
+WMC_mean <- mean(WMC_HMT$WMC_composite) #48.33333
+WMC_sd <- sd(WMC_HMT$WMC_composite) #11.36774
+hmt_mean <- mean(WMC_HMT$HMT_score) #4.710145
+hmt_sd <- sd(WMC_HMT$HMT_score) #1.28454
+
+WMC_HMT_z <- WMC_HMT |> 
+  mutate(WMC_z =  (WMC_composite - WMC_mean) / WMC_sd,
+         HMT_z = (HMT_score - hmt_mean) / hmt_sd)
+
+df_noise_conjdisj_z <- df_noise_conjdisj |>  
+  filter(id %in% WMC_HMT_z$id)
+
+noise_mean <- mean(df_noise_conjdisj_z$d_average)
+noise_sd <- sd(df_noise_conjdisj_z$d_average)
+
+df_noise_conjdisj_z <- df_noise_conjdisj_z |>  
+  mutate(noise_z = (d_average - noise_mean)/noise_sd) 
+
+noise_illogical_HMT_WMC_trials_z <- df_ranking |> 
+  left_join(WMC_HMT_z , by = "id") |> 
+  left_join(df_noise_conjdisj_z, by = "id") |> 
+  dplyr::select(id, f00, condition, logical_pass, number_conj_disj, 
+         noise_z, WMC_z , HMT_z, get_logic) |> 
+  drop_na()
+
+#GLMM:
+glmm_z_condition_noise_WMC_Gf <- glmer(logical_pass ~ condition + noise_z + 
+                         WMC_z + HMT_z +  
+                       (1 + condition |id),
+                     data = noise_illogical_HMT_WMC_trials_z,
+                     family = binomial(link = "logit"),
+                     control = glmerControl(optimizer="bobyqa",
+                                   optCtrl=list(maxfun=1e5)))
+summary(glmm_z_condition_noise_WMC_Gf)
+```
+
+Predictor coefficients:
+
+```{r}
+round(coef(summary(glmm_z_condition_noise_WMC_Gf)),2)
+
+```
+
+Odds ratios (OR) of predictors:
+
+```{r}
+coefs_z <- fixef(glmm_z_condition_noise_WMC_Gf)
+ses_z <- coef(summary(glmm_z_condition_noise_WMC_Gf))[, "Std. Error"]
+
+zval <- 1.96 # for 95% CI
+
+lower_z <- coefs_z - zval * ses_z
+upper_z <- coefs_z + zval * ses_z
+
+or_table_z <- round(cbind(OR = exp(coefs_z), Lower = exp(lower_z), Upper = exp(upper_z)), 2)
+
+or_table_z
+```
