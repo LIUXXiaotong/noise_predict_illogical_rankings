@@ -12,32 +12,32 @@ p_load(tidyverse, jsonlite, here)
 `%notin%` <- Negate(`%in%`)
 
 ##read in original .txt file and remove personally identifiable information
-data0 <- read_file("raw_wmc_Gf_results.txt") |>  # Read the text file from JATOS ...
-  str_split('\n') |>  first()  |>    # ... split it into lines ...
-  discard(function(x) x == '') |>    # ... filter empty rows ...
-  map_dfr(fromJSON, flatten=T)  |> 
-  group_by(prolific_ID_url) |> 
-  fill(prolific_ID, meta.userAgent, .direction = "updown") |> 
-  ungroup() 
-
-data0 <- data0 |>  
-  group_by(prolific_ID) |>  
-  mutate(count_rows = n()) |>  
-  filter(count_rows > 1450 ) |> #exclude those who did not finish
-  ungroup()
-
-mapping <- read_csv("mapping.csv")
-mapping$prolific_id <- as.character(mapping$prolific_id)
-
-data0 <- data0 |> 
- left_join(mapping, by = c("prolific_ID_url" = "prolific_id")) |> 
- rename(id = anon_id) |>
- relocate(id, .before = everything()) |> 
- select(-prolific_ID_url, -prolific_ID, -session_ID, -study_ID, 
-        -timestamp, -localTime, -date_exp, -meta.location) |> 
- select(-starts_with("...")) 
-
-save(data0, file = "part4_WMC_Gf.RData")
+#data0 <- read_file("raw_wmc_Gf_results.txt") |>  # Read the text file from JATOS ...
+# str_split('\n') |>  first()  |>    # ... split it into lines ...
+#  discard(function(x) x == '') |>    # ... filter empty rows ...
+#  map_dfr(fromJSON, flatten=T)  |> 
+#  group_by(prolific_ID_url) |> 
+#  fill(prolific_ID, meta.userAgent, .direction = "updown") |> 
+#  ungroup() 
+#
+#data0 <- data0 |>  
+#  group_by(prolific_ID) |>  
+#  mutate(count_rows = n()) |>  
+#  filter(count_rows > 1450 ) |> #exclude those who did not finish
+#  ungroup()
+#
+#mapping <- read_csv("mapping.csv")
+#mapping$prolific_id <- as.character(mapping$prolific_id)
+#
+#data0 <- data0 |> 
+# left_join(mapping, by = c("prolific_ID_url" = "prolific_id")) |> 
+# rename(id = anon_id) |>
+# relocate(id, .before = everything()) |> 
+# select(-prolific_ID_url, -prolific_ID, -session_ID, -study_ID, 
+#        -timestamp, -localTime, -date_exp, -meta.location) |> 
+# select(-starts_with("...")) 
+#
+#save(data0, file = "part4_WMC_Gf.RData")
 load("part4_WMC_Gf.RData")
 
 ### participants' comments --------------------------------------------------
