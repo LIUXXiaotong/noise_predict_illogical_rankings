@@ -12,17 +12,17 @@ p_load(tidyverse, jsonlite, here)
 `%notin%` <- Negate(`%in%`)
 
 ### read in original .txt file and remove personally identifiable information
-data0 <- read_file("raw_wmc_results.txt") |> # Read the text file from JATOS ...
-   str_split('\n') |> first()  |>    # ... split it into lines ...
-   discard(function(x) x == '') |>   # ... filter empty rows ...
-   map_dfr(fromJSON, flatten=T)  |> 
-  fill(url.srid, .direction = "down") |> 
-  group_by(url.srid) |> 
-  fill(prolific_ID, .direction = "updown") |> 
-  ungroup() |> 
-  mutate(prolific_ID = sub("@email\\.prolific\\.co$", "", prolific_ID))
-
-############ replace prolific IDs with random strings 
+#data0 <- read_file("raw_wmc_results.txt") |> # Read the text file from JATOS ...
+#   str_split('\n') |> first()  |>    # ... split it into lines ...
+#   discard(function(x) x == '') |>   # ... filter empty rows ...
+#   map_dfr(fromJSON, flatten=T)  |> 
+#  fill(url.srid, .direction = "down") |> 
+#  group_by(url.srid) |> 
+#  fill(prolific_ID, .direction = "updown") |> 
+#  ungroup() |> 
+#  mutate(prolific_ID = sub("@email\\.prolific\\.co$", "", prolific_ID))
+#
+############# replace prolific IDs with random strings 
 #set.seed(1)
 ##
 #data0$prolific_ID <- as.character(data0$prolific_ID)
