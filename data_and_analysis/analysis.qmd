@@ -22,8 +22,11 @@ p_load(tidyverse, here, GGally, ppcor, lme4)
 df_noise_conjdisj <- read.csv(here::here("data_and_analysis", "data",
                                          "part2_estimation_task",
                                          "noise_conj_disj.csv"))
- #155 participants 
+#155 participants 
 
+#if the data cannot be read, try df_ranking <- read.csv(here::here("data",
+#                                  "part3_ranking_task", 
+#                                  "result_ranking.csv"))
 df_ranking <- read.csv(here::here("data_and_analysis", "data",
                                   "part3_ranking_task", 
                                   "result_ranking.csv")) |> 
