@@ -39,8 +39,9 @@ df_SSPAN <- read.csv(here::here("data_and_analysis", "data",
                                 "df_part4_SSPAN.csv")) |>  
   filter(id %in% df_ranking$id) #87 participants
 
-#df_RSPAN <- read.csv(here::here("data", "part4_WMC_Gf", 
-#                          "df_part4_RSPAN.csv")) |>  
+#df_RSPAN <- read.csv(here::here("data_and_analysis", "data", 
+#                                 "part4_WMC_Gf", 
+#                                 "df_part4_RSPAN.csv")) |>  
 #  filter(id %in% df_ranking$id)  #87 participants 
 ###we decided to not use the RSPAN scores
 
