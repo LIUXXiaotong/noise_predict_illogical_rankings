@@ -55,7 +55,7 @@ plots_dir <- file.path(getwd(), "plots")
 if (!dir.exists(plots_dir)) dir.create(plots_dir, recursive = TRUE)
 ```
 
-data exclusion ：
+Data exclusion ：
 
 ```{r}
 #part 2: excluding 2 participants who always responded 100\% or 90\%. 
@@ -64,8 +64,9 @@ exclusion_noise <-read.csv(here::here("data_and_analysis", "data",
                                       "exclusion_part2_IDs.csv"
 ))
 
-df_noise_conjdisj <- df_noise_conjdisj |> 
-  filter(! id %in% exclusion_noise$id) #153 participants 
+#df_noise_conjdisj <- df_noise_conjdisj |> 
+ #filter(! id %in% exclusion_noise$id) #|> #153 participants  
+ #filter(d_average >= 0 & d_average <= 0.5)
 
 #part 3: excluding 8 (who translated German to English when performing the experiment) 
 # + 8(who failed the comprehension check question) = 16 participants
@@ -100,9 +101,44 @@ WMC_result <- WMC_result |>
 
 df_HMT <- df_HMT |>
   filter(id %in% WMC_result$id) #69 participants
+
+```
+
+Demographic information:
+
+```{r}
+data_demo <- read.csv(here::here("data_and_analysis",
+                                         "data", "part3_ranking_task", 
+                                   "data_demo.csv"))
+
+data_demo_RQ1 <- data_demo |> 
+  filter(id %in% df_ranking$id)
+
+data_demo_RQ1 |> group_by(gender) |> count()
+
+data_demo_RQ1 |> 
+ summarise(
+    mean_age = mean(age),
+    sd_age = sd(age),
+    range_age = range(age)
+  )
+
+data_demo_RQ2 <- data_demo |> 
+  filter(id %in% df_HMT$id) 
+
+data_demo_RQ2 |> group_by(gender) |> count()
+
+data_demo_RQ2 |> 
+ summarise(
+    mean_age = mean(age),
+    sd_age = sd(age),
+    range_age = range(age)
+  )
 ```
 
 **Robustness check of the results:**
+
+To assess the robustness of the results, in addition to the analyses reported in the main text, we repeated the analyses under alternative exclusion criteria: We (1) repeated the analyses without excluding any participant in Part 2 (the estimation task) (by skipping the code `df_noise_conjdisj <- df_noise_conjdisj |> filter(! id %in% exclusion_noise$id)`), and (2) repeated the analyses further excluding those participants whose estimated noise parameters lie outside of the theoretical ranges ( by running the code `df_noise_conjdisj <- df_noise_conjdisj |> filter(! id %in% exclusion_noise$id) |> filter(d_average >= 0 & d_average <= 0.5` instead). Across these specifications, the results were similar to the results reported in the main text and our substantive conclusions remained unchanged.
 
 ## Research Question 1
 
