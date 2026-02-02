@@ -9,7 +9,7 @@ format:
 
 R preparation
 
-```{r R preparation}
+```{r}
 #| echo: true
 
 if (!requireNamespace("pacman", quietly = TRUE)) { 
@@ -68,8 +68,8 @@ exclusion_noise <-read.csv(here::here("data_and_analysis", "data",
                                       "exclusion_part2_IDs.csv"
 ))
 
-#df_noise_conjdisj <- df_noise_conjdisj |> 
- #filter(! id %in% exclusion_noise$id) #|> #153 participants  
+df_noise_conjdisj <- df_noise_conjdisj |> 
+ filter(! id %in% exclusion_noise$id) #|> #153 participants  
  #filter(d_average >= 0 & d_average <= 0.5)
 
 #part 3: excluding 8 (who translated German to English when performing the experiment) 
