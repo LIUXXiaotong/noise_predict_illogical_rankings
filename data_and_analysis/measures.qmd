@@ -23,6 +23,9 @@ exclusion_noise <-read.csv(here::here("data_and_analysis", "data",
                                       "exclusion_part2_IDs.csv"
 ))
 
+#if the data cannot be read, try df_noise <- read.csv(here::here("data",
+#                                         "part2_estimation_task",
+#                                         "noise_conj_disj.csv"))
 df_noise <- read.csv(here::here("data_and_analysis", "data",
                                          "part2_estimation_task",
                                          "noise_conj_disj.csv")) |> 
@@ -227,7 +230,7 @@ upper <- coefs + zval * ses
 (or_table <- round(cbind(OR = exp(coefs), Lower = exp(lower), Upper = exp(upper)), 2))
 ```
 
-### WMC: 
+### WMC:
 
 #### Descriptive statistics：
 
