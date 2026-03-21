@@ -178,10 +178,11 @@ aggregated_noise_illogical <- df_ranking_aggregated |>
 
 #plot
 custom_labels <- c(
-  "Estimated\nNoise Parameter",
-   "Number of\nIllogical Rankings", 
-  "Count of Conjunction\nand Disjunction Fallacies"
+  "atop('Estimated Noise', 'Parameter ' * hat(italic(d)))",
+  "atop('Number of', 'Illogical Rankings')", 
+  "atop('Count of Conjunction', 'and Disjunction Fallacies')"
 )
+
 
 lower_lm <- function(data, mapping,
                      se = TRUE, level = 0.95, linewidth = 1,
@@ -198,6 +199,7 @@ lower_lm <- function(data, mapping,
   aggregated_noise_illogical,
   columns = 2:4,
   columnLabels = custom_labels,
+  labeller = "label_parsed",
    upper = list(continuous = wrap("cor", size = 5, digits = 2)),
   lower = list(continuous = wrap(lower_lm,
                                  se = TRUE, level = 0.95, linewidth = 1)),
@@ -370,16 +372,19 @@ noise_illogical_WMC_Gf_aggregated <- aggregated_noise_illogical  |>
 
 #plot 
 custom_labels_noise_illogical_WMC <- c(
-   "Estimated\nNoise Parameter",
-    "WMC",
+  "atop('Estimated Noise', 'Parameter ' * hat(italic(d)))",
+   "WMC",
    "Gf",
-   "Number of\nIllogical Rankings"
+  "atop('Number of', 'Illogical Rankings')"
    # "Number of Conjunction\nand Disjunction Errors"
  )
+
+
 
 ( p2 <- ggpairs(
   noise_illogical_WMC_Gf_aggregated, columns = 2:5,
   columnLabels = custom_labels_noise_illogical_WMC,
+  labeller = "label_parsed",
   upper = list(continuous = wrap("cor", size = 4, digits = 2)),
   lower = list(continuous = wrap(lower_lm, se = TRUE, level = 0.95, linewidth = 1)),
   diag  = list(continuous = "densityDiag")
