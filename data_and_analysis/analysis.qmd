@@ -16,7 +16,7 @@ if (!requireNamespace("pacman", quietly = TRUE)) {
   install.packages("pacman")
 } 
 library("pacman")
-p_load(tidyverse, here, GGally, ppcor, lme4)
+p_load(tidyverse, here, GGally, ppcor, lme4, lmtest)
 
 ## read-in data 
 #if the data cannot be read, try df_noise_conjdisj <- read.csv(here::here("data",
@@ -161,6 +161,7 @@ df_ranking_aggregated <- df_ranking |>
 aggregated_noise_illogical <- df_ranking_aggregated |> 
   left_join(df_noise_conjdisj, by = "id") |>
   drop_na() |> 
+  ungroup() |> 
   dplyr::select(id,
          d_average,  
          #number_conj,
@@ -168,6 +169,19 @@ aggregated_noise_illogical <- df_ranking_aggregated |>
          sum_illogical,
          number_conj_disj,
          get_logic) #125 participants 
+
+#descriptive statistics 
+( summary_table <- aggregated_noise_illogical |>
+  summarise(across(c(d_average, sum_illogical, number_conj_disj, get_logic), 
+            list(
+              mean = ~mean(.x, na.rm = TRUE),
+              sd   = ~sd(.x, na.rm = TRUE),
+              min  = ~min(.x, na.rm = TRUE),
+              max  = ~max(.x, na.rm = TRUE)
+            ), 
+            .names = "{.col}_{.fn}")) |>
+  mutate(across(everything(), ~round(.x, 2))))
+
 ```
 
 ```{r}
@@ -179,7 +193,7 @@ aggregated_noise_illogical <- df_ranking_aggregated |>
 #plot
 custom_labels <- c(
   "atop('Estimated Noise', 'Parameter ' * hat(italic(d)))",
-  "atop('Number of', 'Illogical Rankings')", 
+  "atop('Frequency of', 'Illogical Rankings')", 
   "atop('Count of Conjunction', 'and Disjunction Fallacies')"
 )
 
@@ -298,23 +312,11 @@ noise_illogical_by_trials <- df_ranking  |>
 
 ```
 
-predictors: noise, event-set type
-
-```{r}
-str(noise_illogical_by_trials)
-options(contrasts = c("contr.treatment", "contr.poly"))
-
-glmm_condition_noise <- glmer(logical_pass ~ condition + d_average + 
-                                           (1 + condition|id),
-                     data = noise_illogical_by_trials,
-                     family = binomial(link = "logit"))
-
-summary(glmm_condition_noise)
-
-
-```
+**Exploratory analysis: Is *even-set condition* a moderator?**
 
 predictors: noise, event-set type, and their interactions
+
+the interaction not significant
 
 ```{r}
 options(contrasts = c("contr.treatment", "contr.poly"))
@@ -326,19 +328,82 @@ glmm_condition_noise_interaction <- glmer(logical_pass ~ condition + d_average +
                      family = binomial(link = "logit"))
 
 summary(glmm_condition_noise_interaction)
+
+get_or_table <- function(model, ci_level = 0.95) {
+  # Get coefficients and SEs
+  summ <- summary(model)$coefficients
+  coefs <- summ[, "Estimate"]
+  ses <- summ[, "Std. Error"]
+  
+  # Calculate critical value based on user-defined CI level
+  tail_area <- (1 - ci_level) / 2
+  zval <- abs(qnorm(tail_area))
+  
+  # The Math
+  lower <- exp(coefs - zval * ses)
+  upper <- exp(coefs + zval * ses)
+  or <- exp(coefs)
+  
+  # Combine and round
+  res <- round(cbind(OR = or, Lower = lower, Upper = upper), 3)
+  return(as.data.frame(res))
+}
+
+get_or_table(glmm_condition_noise_interaction)
 ```
+
+**Exploratory analysis: trial number as predictor**
 
 predictors: noise, event-set type, f00(number of trials), if participants answered logic question correct or not (get_logical = 1, if the participant answered the question correctly)
 
 ```{r}
 options(contrasts = c("contr.treatment", "contr.poly"))
 
-glmm_condition_noise_logicQ_f00 <- glmer(logical_pass ~ condition + d_average + 
-                                             get_logic + f00 +
+glmm_condition_noise_f00 <- glmer(logical_pass ~ condition + d_average + 
+                                             f00 +
                                            (1 + condition |id),
                      data = noise_illogical_by_trials,
                      family = binomial(link = "logit"))
-summary(glmm_condition_noise_logicQ_f00)
+
+summary(glmm_condition_noise_f00)
+
+get_or_table(glmm_condition_noise_f00)
+```
+
+**Exploratory analysis:** if the estimated noise parameter $\hat{d}$ explained additional variance in the frequency of illogical rankings beyond the effect of the event-set conditions
+
+predictors: event-set type
+
+```{r}
+
+options(contrasts = c("contr.treatment", "contr.poly"))
+
+glmm_condition <- glmer(logical_pass ~ condition + 
+                                           (1 + condition|id),
+                     data = noise_illogical_by_trials,
+                     family = binomial(link = "logit"))
+
+```
+
+predictors: noise, event-set type
+
+```{r}
+options(contrasts = c("contr.treatment", "contr.poly"))
+
+glmm_condition_noise <- glmer(logical_pass ~ condition + d_average + 
+                                           (1 + condition|id),
+                     data = noise_illogical_by_trials,
+                     family = binomial(link = "logit"))
+
+summary(glmm_condition_noise)
+
+get_or_table(glmm_condition_noise)
+```
+
+likelihood ratio test:
+
+```{r}
+lrtest(glmm_condition, glmm_condition_noise)
 ```
 
 ## Research Question 2
@@ -360,8 +425,22 @@ WMC_HMT <- WMC_result |>
 
 noise_illogical_WMC_Gf_aggregated <- aggregated_noise_illogical  |>  
   left_join(WMC_HMT , by = "id")  |> 
-  dplyr::select(id, d_average, WMC_composite, HMT_score, sum_illogical, get_logic, number_conj_disj) |> 
+  ungroup() |> 
+  dplyr::select(id, d_average, WMC_composite, HMT_score, sum_illogical, 
+                number_conj_disj, get_logic) |> 
   drop_na() #69 participants 
+
+( summary_table2 <- noise_illogical_WMC_Gf_aggregated |>
+  summarise(across(c(d_average, WMC_composite, HMT_score, 
+                     sum_illogical, number_conj_disj), 
+            list(
+              mean = ~mean(.x, na.rm = TRUE),
+              sd   = ~sd(.x, na.rm = TRUE),
+              min  = ~min(.x, na.rm = TRUE),
+              max  = ~max(.x, na.rm = TRUE)
+            ), 
+            .names = "{.col}_{.fn}")) |>
+  mutate(across(everything(), ~round(.x, 2))) )
 ```
 
 ```{r}
@@ -375,8 +454,8 @@ custom_labels_noise_illogical_WMC <- c(
   "atop('Estimated Noise', 'Parameter ' * hat(italic(d)))",
    "WMC",
    "Gf",
-  "atop('Number of', 'Illogical Rankings')"
-   # "Number of Conjunction\nand Disjunction Errors"
+  "atop('Frequency of', 'Illogical Rankings')"
+  #"atop('Count of Conjunction', 'and Disjunction Errors')"
  )
 
 
@@ -393,7 +472,7 @@ custom_labels_noise_illogical_WMC <- c(
 
 #save the plot
 ggsave(
-  filename = file.path(plots_dir, "noise_illogical_Gf_WMC.pdf"),
+  filename = file.path(plots_dir, "noise_illogical_HMT_WMC.pdf"),
   plot = p2,
   width = 7, height = 7
 )
@@ -522,15 +601,24 @@ round(coef(summary(glmm_z_condition_noise_WMC_Gf)),2)
 Odds ratios (OR) of predictors:
 
 ```{r}
-coefs_z <- fixef(glmm_z_condition_noise_WMC_Gf)
-ses_z <- coef(summary(glmm_z_condition_noise_WMC_Gf))[, "Std. Error"]
+get_or_table(glmm_z_condition_noise_WMC_Gf)
+```
 
-zval <- 1.96 # for 95% CI
+**Exploratory analysis**: Did Gf scores differ significantly between participants who correctly identified the logic of the mathematical notations and those who did not?
 
-lower_z <- coefs_z - zval * ses_z
-upper_z <- coefs_z + zval * ses_z
+```{r}
 
-or_table_z <- round(cbind(OR = exp(coefs_z), Lower = exp(lower_z), Upper = exp(upper_z)), 2)
+noise_illogical_WMC_Gf_aggregated |> 
+  filter(get_logic == "FALSE") |> 
+  summarise(mean_Gf = mean(HMT_score),
+            sd_Gf = sd(HMT_score))
 
-or_table_z
+noise_illogical_WMC_Gf_aggregated |> 
+  filter(get_logic == "TRUE") |> 
+  summarise(mean_Gf = mean(HMT_score),
+            sd_Gf = sd(HMT_score))
+
+
+t.test(HMT_score ~ get_logic, data = noise_illogical_WMC_Gf_aggregated)
+
 ```
