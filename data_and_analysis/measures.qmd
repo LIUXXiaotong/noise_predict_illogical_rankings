@@ -84,7 +84,6 @@ df_HMT <- read.csv(here::here("data_and_analysis", "data",
                               "df_HMT.csv")) |>  
   select(id, HMT_score = no_correct) |>  
   filter(id %in% WMC_result$id) 
-
 ```
 
 ### **The Estimated Noise Parameter :**

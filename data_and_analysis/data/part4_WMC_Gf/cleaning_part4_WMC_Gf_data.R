@@ -228,13 +228,30 @@ data_HMT <- data0 |>
                        "HMT-S_Seq",
                        "HTM-S_Ende",
                        "HMT-S_GrandSequence")) |> 
-  select(id, HMTresponded, sender, responses: corrAnsw) |>  
+  select(id, sender_id, HMTresponded, sender, responses: corrAnsw) |>  
   drop_na() |>  
   mutate(responses_correct = ifelse(responses == corrAnsw, TRUE, FALSE)) |> 
   group_by(id) |> 
   mutate(no_correct = sum(responses_correct)) |> 
-  select(id, HMTresponded, sender, responses, corrAnsw, responses_correct, no_correct) |> 
-  select(id, no_correct) |>  unique()
+  ungroup()
+
+
+data_HMT <- data_HMT |> 
+  select(id, sender_id, responses_correct, no_correct) |> 
+  mutate(
+    sender_id = recode(sender_id,
+                       "9_4_0_0_0" = "item_1",
+                       "9_4_0_1_0" = "item_2",
+                       "9_4_0_2_0" = "item_3",
+                       "9_4_0_3_0" = "item_4",
+                       "9_4_0_4_0" = "item_5",
+                       "9_4_0_5_0" = "item_6"
+    ),
+  
+    responses_correct = as.integer(responses_correct)
+  ) |> 
+  pivot_wider(names_from = sender_id, values_from = responses_correct) 
 
 write.csv(data_HMT, "df_HMT.csv", row.names = FALSE)
+
 

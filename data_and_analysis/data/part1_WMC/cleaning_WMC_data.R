@@ -256,3 +256,25 @@ write.csv(df_OSPAN_cleaned, "df_OSPAN.csv", row.names = FALSE)
 write.csv(df_SSPAN_cleaned, "df_SSPAN.csv", row.names = FALSE)
 write.csv(df_RSPAN_cleaned, "df_RSPAN.csv", row.names = FALSE)
 
+########
+WMC_result <- df_OSPAN_cleaned |> 
+  full_join(df_SSPAN_cleaned, by = c("id", "splength")) 
+
+WMC_result <- WMC_result  |>  
+  group_by(id)  |>  
+  fill(OSPAN_processing, SSPAN_processing, .direction = "updown")  |> 
+  mutate(OSPAN_pass = ifelse(OSPAN_processing >= 0.85, 1, 0),
+         SSPAN_pass = ifelse(SSPAN_processing >= 0.85, 1, 0)) |> 
+  filter(OSPAN_pass == 1 & SSPAN_pass == 1 ) |> 
+  group_by(id)  |> 
+  mutate(OSPAN_PC_count_sum = sum(OSPAN_partial_credit, na.rm = TRUE),
+         SSPAN_PC_count_sum = sum(SSPAN_partial_credit, na.rm = TRUE)) |> 
+  select(id, OSPAN_processing, SSPAN_processing, 
+         OSPAN_PC_count_sum, SSPAN_PC_count_sum) |> 
+  unique() |> 
+  mutate(composite_score = OSPAN_PC_count_sum + SSPAN_PC_count_sum)
+
+hist(WMC_result$composite_score, xlab = "Composite scores", main = "WMC score")
+
+view (WMC_result |> group_by(composite_score) |> 
+  count())

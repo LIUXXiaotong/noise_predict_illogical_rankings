@@ -118,7 +118,7 @@ data_demo <- read.csv(here::here("data_and_analysis",
 data_demo_RQ1 <- data_demo |> 
   filter(id %in% df_ranking$id)
 
-data_demo_RQ1 |> group_by(gender) |> count()
+data_demo_RQ1 |> group_by(gender) |> count() 
 
 data_demo_RQ1 |> 
  summarise(
