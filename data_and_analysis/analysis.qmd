@@ -69,8 +69,8 @@ exclusion_noise <-read.csv(here::here("data_and_analysis", "data",
 ))
 
 df_noise_conjdisj <- df_noise_conjdisj |> 
- filter(! id %in% exclusion_noise$id) #|> #153 participants  
- #filter(d_average >= 0 & d_average <= 0.5)
+ filter(! id %in% exclusion_noise$id) |> #153 participants  
+ filter(d_average >= 0 & d_average <= 0.5)
 
 #part 3: excluding 8 (who translated German to English when performing the experiment) 
 # + 8(who failed the comprehension check question) = 16 participants
@@ -222,10 +222,16 @@ lower_lm <- function(data, mapping,
   theme_bw(base_size = 14) ) 
 
 #save the plot
+#ggsave(
+#  filename = file.path(plots_dir, "noise_ranking_conjdisj.pdf"),
+#  plot = p1,
+#  width = 6.4, height = 6.4
+#)
 ggsave(
-  filename = file.path(plots_dir, "noise_ranking_conjdisj.pdf"),
+  filename = file.path(plots_dir, "noise_ranking_conjdisj_exclu.png"),
   plot = p1,
-  width = 6.4, height = 6.4
+  width = 6.4, height = 6.4,
+  dpi = 300
 )
 ```
 
@@ -471,10 +477,16 @@ custom_labels_noise_illogical_WMC <- c(
   theme_bw(base_size = 14) )
 
 #save the plot
+#ggsave(
+#  filename = file.path(plots_dir, "noise_illogical_HMT_WMC.pdf"),
+#  plot = p2,
+#  width = 7, height = 7
+#)
 ggsave(
-  filename = file.path(plots_dir, "noise_illogical_HMT_WMC.pdf"),
+  filename = file.path(plots_dir, "noise_illogical_HMT_WMC_exclu.png"),
   plot = p2,
-  width = 7, height = 7
+  width = 7, height = 7,
+  dpi=300
 )
 ```
 

@@ -201,8 +201,8 @@ window.Quarto = {
 <span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>))</span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>df_noise_conjdisj <span class="ot">&lt;-</span> df_noise_conjdisj <span class="sc">|&gt;</span> </span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a> <span class="fu">filter</span>(<span class="sc">!</span> id <span class="sc">%in%</span> exclusion_noise<span class="sc">$</span>id) <span class="co">#|&gt; #153 participants  </span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a> <span class="co">#filter(d_average &gt;= 0 &amp; d_average &lt;= 0.5)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a> <span class="fu">filter</span>(<span class="sc">!</span> id <span class="sc">%in%</span> exclusion_noise<span class="sc">$</span>id) <span class="sc">|&gt;</span> <span class="co">#153 participants  </span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a> <span class="fu">filter</span>(d_average <span class="sc">&gt;=</span> <span class="dv">0</span> <span class="sc">&amp;</span> d_average <span class="sc">&lt;=</span> <span class="fl">0.5</span>)</span>
 <span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co">#part 3: excluding 8 (who translated German to English when performing the experiment) </span></span>
 <span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># + 8(who failed the comprehension check question) = 16 participants</span></span>
@@ -247,14 +247,14 @@ window.Quarto = {
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>data_demo_RQ1 <span class="ot">&lt;-</span> data_demo <span class="sc">|&gt;</span> </span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(id <span class="sc">%in%</span> df_ranking<span class="sc">$</span>id)</span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>data_demo_RQ1 <span class="sc">|&gt;</span> <span class="fu">group_by</span>(gender) <span class="sc">|&gt;</span> <span class="fu">count</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>data_demo_RQ1 <span class="sc">|&gt;</span> <span class="fu">group_by</span>(gender) <span class="sc">|&gt;</span> <span class="fu">count</span>() </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 3 × 2
 # Groups:   gender [3]
   gender         n
   &lt;chr&gt;      &lt;int&gt;
-1 female        35
-2 male          88
+1 female        32
+2 male          76
 3 non-binary     2</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data_demo_RQ1 <span class="sc">|&gt;</span> </span>
@@ -272,8 +272,8 @@ dplyr 1.1.0.
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  mean_age   sd_age range_age
-1   28.304 6.951704        19
-2   28.304 6.951704        63</code></pre>
+1 28.59091 7.278592        19
+2 28.59091 7.278592        63</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>data_demo_RQ2 <span class="ot">&lt;-</span> data_demo <span class="sc">|&gt;</span> </span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(id <span class="sc">%in%</span> df_HMT<span class="sc">$</span>id) </span>
@@ -284,8 +284,8 @@ dplyr 1.1.0.
 # Groups:   gender [2]
   gender     n
   &lt;chr&gt;  &lt;int&gt;
-1 female    16
-2 male      53</code></pre>
+1 female    15
+2 male      45</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>data_demo_RQ2 <span class="sc">|&gt;</span> </span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a> <span class="fu">summarise</span>(</span>
@@ -302,8 +302,8 @@ dplyr 1.1.0.
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>  mean_age   sd_age range_age
-1 27.89855 7.853708        19
-2 27.89855 7.853708        63</code></pre>
+1 28.16667 8.277326        19
+2 28.16667 8.277326        63</code></pre>
 </div>
 </div>
 <p><strong>Robustness check of the results:</strong></p>
@@ -347,7 +347,7 @@ dplyr 1.1.0.
 <pre><code># A tibble: 1 × 16
   d_average_mean d_average_sd d_average_min d_average_max sum_illogical_mean
            &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;              &lt;dbl&gt;
-1           0.18         0.17         -0.06          0.87               9.06
+1           0.17         0.12          0.01          0.49               8.94
 # ℹ 11 more variables: sum_illogical_sd &lt;dbl&gt;, sum_illogical_min &lt;dbl&gt;,
 #   sum_illogical_max &lt;dbl&gt;, number_conj_disj_mean &lt;dbl&gt;,
 #   number_conj_disj_sd &lt;dbl&gt;, number_conj_disj_min &lt;dbl&gt;,
@@ -400,11 +400,17 @@ dplyr 1.1.0.
 </div>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">#save the plot</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> <span class="fu">file.path</span>(plots_dir, <span class="st">"noise_ranking_conjdisj.pdf"</span>),</span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> p1,</span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="fl">6.4</span>, <span class="at">height =</span> <span class="fl">6.4</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave(</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co">#  filename = file.path(plots_dir, "noise_ranking_conjdisj.pdf"),</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co">#  plot = p1,</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  width = 6.4, height = 6.4</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co">#)</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> <span class="fu">file.path</span>(plots_dir, <span class="st">"noise_ranking_conjdisj_exclu.png"</span>),</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> p1,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="fl">6.4</span>, <span class="at">height =</span> <span class="fl">6.4</span>,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi =</span> <span class="dv">300</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using formula = 'y ~ x'
 `geom_smooth()` using formula = 'y ~ x'
@@ -423,13 +429,13 @@ dplyr 1.1.0.
     Pearson's product-moment correlation
 
 data:  aggregated_noise_illogical$d_average and aggregated_noise_illogical$sum_illogical
-t = 4.8919, df = 123, p-value = 3.059e-06
+t = 3.7294, df = 108, p-value = 0.0003076
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- 0.2453556 0.5408515
+ 0.1606938 0.4937843
 sample estimates:
       cor 
-0.4035746 </code></pre>
+0.3377722 </code></pre>
 </div>
 </div>
 <p><strong>Pearson correlation</strong> between the estimated noise and the count of disjunction and conjunction fallacies:</p>
@@ -443,13 +449,13 @@ sample estimates:
     Pearson's product-moment correlation
 
 data:  aggregated_noise_illogical$d_average and aggregated_noise_illogical$number_conj_disj
-t = 5.1951, df = 123, p-value = 8.23e-07
+t = 6.5519, df = 108, p-value = 1.992e-09
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- 0.2685949 0.5582192
+ 0.3844622 0.6551331
 sample estimates:
-      cor 
-0.4241944 </code></pre>
+     cor 
+0.533312 </code></pre>
 </div>
 </div>
 <p><strong>Pearson correlation</strong> between the number of illogical rankings and the count of disjunction and conjunction fallacies:</p>
@@ -463,13 +469,13 @@ sample estimates:
     Pearson's product-moment correlation
 
 data:  aggregated_noise_illogical$sum_illogical and aggregated_noise_illogical$number_conj_disj
-t = 2.0598, df = 123, p-value = 0.04153
+t = 1.7319, df = 108, p-value = 0.08615
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- 0.007227642 0.347081225
+ -0.02358495  0.34112437
 sample estimates:
       cor 
-0.1826034 </code></pre>
+0.1643824 </code></pre>
 </div>
 </div>
 <p><strong>Partial correlation</strong> between the estimated noise parameter and the number of illogical rankings, controlling for the count of conjunction and disjunction fallacies:</p>
@@ -477,8 +483,8 @@ sample estimates:
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>pc <span class="ot">&lt;-</span> <span class="fu">pcor.test</span>(aggregated_noise_illogical[,<span class="st">"d_average"</span>], aggregated_noise_illogical[,<span class="st">"sum_illogical"</span>], aggregated_noise_illogical[,<span class="st">"number_conj_disj"</span>], <span class="at">method =</span> <span class="st">"pearson"</span>)</span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>pc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   estimate      p.value statistic   n gp  Method
-1 0.3662794 2.867343e-05  4.347842 125  1 pearson</code></pre>
+<pre><code>   estimate     p.value statistic   n gp  Method
+1 0.2997383 0.001543291  3.249945 110  1 pearson</code></pre>
 </div>
 </div>
 <p>95% confidence interval:</p>
@@ -492,7 +498,7 @@ sample estimates:
 <span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>ci <span class="ot">&lt;-</span> <span class="fu">tanh</span>(<span class="fu">c</span>(z <span class="sc">-</span> zcrit<span class="sc">*</span>se, z <span class="sc">+</span> zcrit<span class="sc">*</span>se))</span>
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>ci</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.2030778 0.5096803</code></pre>
+<pre><code>[1] 0.1183069 0.4618030</code></pre>
 </div>
 </div>
 <p><strong>Partial correlation</strong> between the number of illogical rankings and the count of conjunction and disjunction fallacies, controlling for the estimated noise parameter</p>
@@ -501,8 +507,8 @@ sample estimates:
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>                 aggregated_noise_illogical[,<span class="st">"d_average"</span>], <span class="at">method =</span> <span class="st">"pearson"</span>)</span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>pc2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>    estimate   p.value statistic   n gp  Method
-1 0.01377026 0.8793499 0.1521119 125  1 pearson</code></pre>
+<pre><code>     estimate   p.value  statistic   n gp  Method
+1 -0.01978831 0.8381705 -0.2047319 110  1 pearson</code></pre>
 </div>
 </div>
 <p>95% confidence interval:</p>
@@ -516,7 +522,7 @@ sample estimates:
 <span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>ci2 <span class="ot">&lt;-</span> <span class="fu">tanh</span>(<span class="fu">c</span>(z2 <span class="sc">-</span> zcrit2<span class="sc">*</span>se2, z2 <span class="sc">+</span> zcrit2<span class="sc">*</span>se2))</span>
 <span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>ci2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] -0.1629420  0.1896265</code></pre>
+<pre><code>[1] -0.2071191  0.1689423</code></pre>
 </div>
 </div>
 <p><strong>GLMM (logit link function; family: binomial) predicting the probability of logical rankings</strong> with predictors: event-set type, the estimated noise parameter (the interaction between the event-set type and the estimated noise parameter, the trial number, as well as the logic rule question)</p>
@@ -549,32 +555,32 @@ Formula: logical_pass ~ condition + d_average + condition * d_average +
    Data: noise_illogical_by_trials
 
       AIC       BIC    logLik -2*log(L)  df.resid 
-   3525.9    3568.0   -1756.0    3511.9      2993 
+   3084.4    3125.5   -1535.2    3070.4      2633 
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--2.0816 -0.6465 -0.4068  0.7710  2.8849 
+-2.1235 -0.6632 -0.4173  0.7722  3.0809 
 
 Random effects:
  Groups Name            Variance Std.Dev. Corr
- id     (Intercept)     0.4146   0.6439       
-        conditionmiddle 0.3537   0.5948   0.12
-Number of obs: 3000, groups:  id, 125
+ id     (Intercept)     0.3911   0.6254       
+        conditionmiddle 0.2942   0.5424   0.51
+Number of obs: 2640, groups:  id, 110
 
 Fixed effects:
                           Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)                -1.7027     0.1347 -12.637  &lt; 2e-16 ***
-conditionmiddle             1.3670     0.1558   8.775  &lt; 2e-16 ***
-d_average                   2.2586     0.4915   4.596 4.31e-06 ***
-conditionmiddle:d_average  -0.0880     0.5879  -0.150    0.881    
+(Intercept)                -1.8846     0.1681 -11.210  &lt; 2e-16 ***
+conditionmiddle             1.5153     0.1927   7.865 3.69e-15 ***
+d_average                   3.4286     0.7451   4.602 4.19e-06 ***
+conditionmiddle:d_average  -1.1423     0.8704  -1.312    0.189    
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
             (Intr) cndtnm d_avrg
-conditnmddl -0.486              
-d_average   -0.743  0.339       
-cndtnmddl:_  0.330 -0.742 -0.395</code></pre>
+conditnmddl -0.399              
+d_average   -0.824  0.299       
+cndtnmddl:_  0.295 -0.823 -0.305</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>get_or_table <span class="ot">&lt;-</span> <span class="cf">function</span>(model, <span class="at">ci_level =</span> <span class="fl">0.95</span>) {</span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Get coefficients and SEs</span></span>
@@ -598,11 +604,11 @@ cndtnmddl:_  0.330 -0.742 -0.395</code></pre>
 <span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a><span class="fu">get_or_table</span>(glmm_condition_noise_interaction)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                             OR Lower  Upper
-(Intercept)               0.182 0.140  0.237
-conditionmiddle           3.923 2.891  5.324
-d_average                 9.570 3.653 25.076
-conditionmiddle:d_average 0.916 0.289  2.899</code></pre>
+<pre><code>                              OR Lower   Upper
+(Intercept)                0.152 0.109   0.211
+conditionmiddle            4.551 3.119   6.638
+d_average                 30.834 7.158 132.822
+conditionmiddle:d_average  0.319 0.058   1.757</code></pre>
 </div>
 </div>
 <p><strong>Exploratory analysis: trial number as predictor</strong></p>
@@ -625,40 +631,40 @@ Formula: logical_pass ~ condition + d_average + f00 + (1 + condition |      id)
    Data: noise_illogical_by_trials
 
       AIC       BIC    logLik -2*log(L)  df.resid 
-   3515.1    3557.1   -1750.5    3501.1      2993 
+   3073.9    3115.0   -1529.9    3059.9      2633 
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--2.1487 -0.6481 -0.4156  0.7729  2.8997 
+-2.3108 -0.6332 -0.4145  0.7625  2.8468 
 
 Random effects:
  Groups Name            Variance Std.Dev. Corr
- id     (Intercept)     0.4161   0.6450       
-        conditionmiddle 0.3466   0.5887   0.13
-Number of obs: 3000, groups:  id, 125
+ id     (Intercept)     0.3733   0.6110       
+        conditionmiddle 0.3190   0.5648   0.55
+Number of obs: 2640, groups:  id, 110
 
 Fixed effects:
                  Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)     -1.454609   0.145557  -9.993  &lt; 2e-16 ***
-conditionmiddle  1.357626   0.104417  13.002  &lt; 2e-16 ***
-d_average        2.231215   0.452416   4.932 8.15e-07 ***
-f00             -0.019105   0.005784  -3.303 0.000956 ***
+(Intercept)     -1.547730   0.174573  -8.866  &lt; 2e-16 ***
+conditionmiddle  1.313154   0.110330  11.902  &lt; 2e-16 ***
+d_average        3.145368   0.708299   4.441 8.97e-06 ***
+f00             -0.021643   0.006191  -3.496 0.000473 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
             (Intr) cndtnm d_avrg
-conditnmddl -0.311              
-d_average   -0.613  0.072       
-f00         -0.486 -0.041 -0.007</code></pre>
+conditnmddl -0.213              
+d_average   -0.720  0.053       
+f00         -0.435 -0.035 -0.004</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_or_table</span>(glmm_condition_noise_f00)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                   OR Lower  Upper
-(Intercept)     0.233 0.176  0.311
-conditionmiddle 3.887 3.168  4.770
-d_average       9.311 3.836 22.600
-f00             0.981 0.970  0.992</code></pre>
+<pre><code>                    OR Lower  Upper
+(Intercept)      0.213 0.151  0.300
+conditionmiddle  3.718 2.995  4.615
+d_average       23.228 5.796 93.094
+f00              0.979 0.967  0.991</code></pre>
 </div>
 </div>
 <p><strong>Exploratory analysis:</strong> if the estimated noise parameter <span class="math inline">\(\hat{d}\)</span> explained additional variance in the frequency of illogical rankings beyond the effect of the event-set conditions</p>
@@ -689,37 +695,37 @@ Formula: logical_pass ~ condition + d_average + (1 + condition | id)
    Data: noise_illogical_by_trials
 
       AIC       BIC    logLik -2*log(L)  df.resid 
-   3523.9    3560.0   -1756.0    3511.9      2994 
+   3084.1    3119.3   -1536.0    3072.1      2634 
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--2.0875 -0.6452 -0.4082  0.7713  2.8797 
+-2.1755 -0.6507 -0.4202  0.7689  2.9437 
 
 Random effects:
  Groups Name            Variance Std.Dev. Corr
- id     (Intercept)     0.4125   0.6422       
-        conditionmiddle 0.3549   0.5957   0.13
-Number of obs: 3000, groups:  id, 125
+ id     (Intercept)     0.3716   0.6096       
+        conditionmiddle 0.3330   0.5771   0.52
+Number of obs: 2640, groups:  id, 110
 
 Fixed effects:
                 Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)      -1.6960     0.1268 -13.375  &lt; 2e-16 ***
-conditionmiddle   1.3496     0.1045  12.912  &lt; 2e-16 ***
-d_average         2.2298     0.4508   4.946 7.59e-07 ***
+(Intercept)      -1.8239     0.1568  -11.63  &lt; 2e-16 ***
+conditionmiddle   1.3078     0.1107   11.82  &lt; 2e-16 ***
+d_average         3.1508     0.7064    4.46 8.19e-06 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
             (Intr) cndtnm
-conditnmddl -0.379       
-d_average   -0.706  0.071</code></pre>
+conditnmddl -0.254       
+d_average   -0.801  0.052</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_or_table</span>(glmm_condition_noise)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>                   OR Lower  Upper
-(Intercept)     0.183 0.143  0.235
-conditionmiddle 3.856 3.142  4.733
-d_average       9.298 3.842 22.497</code></pre>
+<pre><code>                    OR Lower  Upper
+(Intercept)      0.161 0.119  0.219
+conditionmiddle  3.698 2.977  4.594
+d_average       23.354 5.848 93.257</code></pre>
 </div>
 </div>
 <p>likelihood ratio test:</p>
@@ -730,9 +736,9 @@ d_average       9.298 3.842 22.497</code></pre>
 
 Model 1: logical_pass ~ condition + (1 + condition | id)
 Model 2: logical_pass ~ condition + d_average + (1 + condition | id)
-  #Df  LogLik Df  Chisq Pr(&gt;Chisq)    
-1   5 -1767.3                         
-2   6 -1756.0  1 22.747  1.848e-06 ***
+  #Df  LogLik Df Chisq Pr(&gt;Chisq)    
+1   5 -1545.3                        
+2   6 -1536.0  1 18.62  1.596e-05 ***
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
@@ -775,7 +781,7 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <pre><code># A tibble: 1 × 20
   d_average_mean d_average_sd d_average_min d_average_max WMC_composite_mean
            &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;         &lt;dbl&gt;              &lt;dbl&gt;
-1           0.18         0.18         -0.06          0.87               48.3
+1           0.16         0.13          0.01          0.49               47.9
 # ℹ 15 more variables: WMC_composite_sd &lt;dbl&gt;, WMC_composite_min &lt;dbl&gt;,
 #   WMC_composite_max &lt;dbl&gt;, HMT_score_mean &lt;dbl&gt;, HMT_score_sd &lt;dbl&gt;,
 #   HMT_score_min &lt;dbl&gt;, HMT_score_max &lt;dbl&gt;, sum_illogical_mean &lt;dbl&gt;,
@@ -822,11 +828,17 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 </div>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="co">#save the plot</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> <span class="fu">file.path</span>(plots_dir, <span class="st">"noise_illogical_HMT_WMC.pdf"</span>),</span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> p2,</span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">7</span>, <span class="at">height =</span> <span class="dv">7</span></span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a><span class="co">#ggsave(</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="co">#  filename = file.path(plots_dir, "noise_illogical_HMT_WMC.pdf"),</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a><span class="co">#  plot = p2,</span></span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a><span class="co">#  width = 7, height = 7</span></span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a><span class="co">#)</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(</span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">filename =</span> <span class="fu">file.path</span>(plots_dir, <span class="st">"noise_illogical_HMT_WMC_exclu.png"</span>),</span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot =</span> p2,</span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">width =</span> <span class="dv">7</span>, <span class="at">height =</span> <span class="dv">7</span>,</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">dpi=</span><span class="dv">300</span></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>`geom_smooth()` using formula = 'y ~ x'
 `geom_smooth()` using formula = 'y ~ x'
@@ -846,13 +858,13 @@ Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
     Pearson's product-moment correlation
 
 data:  noise_illogical_WMC_Gf_aggregated$HMT_score and noise_illogical_WMC_Gf_aggregated$sum_illogical
-t = -3.2649, df = 67, p-value = 0.001727
+t = -3.294, df = 58, p-value = 0.001687
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- -0.5582172 -0.1466645
+ -0.5913033 -0.1590974
 sample estimates:
        cor 
--0.3704847 </code></pre>
+-0.3969844 </code></pre>
 </div>
 </div>
 <p><strong>Pearson correlation</strong> between the number of illogical rankings and WMC score</p>
@@ -865,13 +877,13 @@ sample estimates:
     Pearson's product-moment correlation
 
 data:  noise_illogical_WMC_Gf_aggregated$WMC_composite and noise_illogical_WMC_Gf_aggregated$sum_illogical
-t = -1.4338, df = 67, p-value = 0.1563
+t = -1.4796, df = 58, p-value = 0.1444
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- -0.39316708  0.06686914
+ -0.42409948  0.06642916
 sample estimates:
        cor 
--0.1725423 </code></pre>
+-0.1907125 </code></pre>
 </div>
 </div>
 <p><strong>Pearson correlation</strong> between the estimated noise parameter and WMC score</p>
@@ -884,13 +896,13 @@ sample estimates:
     Pearson's product-moment correlation
 
 data:  noise_illogical_WMC_Gf_aggregated$d_average and noise_illogical_WMC_Gf_aggregated$WMC_composite
-t = 0.88032, df = 67, p-value = 0.3818
+t = 1.0011, df = 58, p-value = 0.321
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- -0.1331183  0.3351304
+ -0.1278303  0.3719409
 sample estimates:
       cor 
-0.1069314 </code></pre>
+0.1303247 </code></pre>
 </div>
 </div>
 <p><strong>Pearson correlation</strong> between the estimated noise parameter and Gf score</p>
@@ -903,13 +915,13 @@ sample estimates:
     Pearson's product-moment correlation
 
 data:  noise_illogical_WMC_Gf_aggregated$d_average and noise_illogical_WMC_Gf_aggregated$HMT_score
-t = -0.91664, df = 67, p-value = 0.3626
+t = -1.5783, df = 58, p-value = 0.1199
 alternative hypothesis: true correlation is not equal to 0
 95 percent confidence interval:
- -0.3390402  0.1287829
+ -0.43446865  0.05376323
 sample estimates:
        cor 
--0.1112899 </code></pre>
+-0.2029319 </code></pre>
 </div>
 </div>
 <p><strong>GLMM (logit link function; family: binomial) predicting the probability of logical rankings</strong> with predictors: event-set type, the estimated noise parameter, WMC score and Gf score.</p>
@@ -942,34 +954,34 @@ Formula: logical_pass ~ condition + d_average + WMC_composite + HMT_score +
 Control: glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+05))
 
       AIC       BIC    logLik -2*log(L)  df.resid 
-   1914.9    1958.2    -949.5    1898.9      1648 
+   1639.4    1681.6    -811.7    1623.4      1432 
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--2.0414 -0.6423 -0.4068  0.7540  3.0866 
+-2.1513 -0.6213 -0.4026  0.6888  3.2129 
 
 Random effects:
  Groups Name            Variance Std.Dev. Corr
- id     (Intercept)     0.3410   0.5839       
-        conditionmiddle 0.4534   0.6734   0.18
-Number of obs: 1656, groups:  id, 69
+ id     (Intercept)     0.3436   0.5862       
+        conditionmiddle 0.4181   0.6466   0.47
+Number of obs: 1440, groups:  id, 60
 
 Fixed effects:
                  Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)     -0.281435   0.493933  -0.570 0.568824    
-conditionmiddle  1.344945   0.147037   9.147  &lt; 2e-16 ***
-d_average        2.017319   0.560162   3.601 0.000317 ***
-WMC_composite   -0.008036   0.009851  -0.816 0.414675    
-HMT_score       -0.218329   0.088645  -2.463 0.013779 *  
+(Intercept)     -0.464607   0.556788  -0.834  0.40403    
+conditionmiddle  1.371520   0.157971   8.682  &lt; 2e-16 ***
+d_average        2.545511   0.956340   2.662  0.00777 ** 
+WMC_composite   -0.009799   0.011110  -0.882  0.37777    
+HMT_score       -0.191763   0.098826  -1.940  0.05233 .  
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
             (Intr) cndtnm d_avrg WMC_cm
-conditnmddl -0.057                     
-d_average   -0.181  0.056              
-WMC_compost -0.568 -0.011 -0.164       
-HMT_score   -0.443 -0.062  0.140 -0.425</code></pre>
+conditnmddl -0.012                     
+d_average   -0.290  0.044              
+WMC_compost -0.526 -0.023 -0.239       
+HMT_score   -0.465 -0.080  0.267 -0.431</code></pre>
 </div>
 </div>
 <p>Predictors: event-set type (condition), noise (d_average), WMC score (WMC_composite), Gf score (HMT_score), interaction between condition and WMC score, interaction between condition and Gf score</p>
@@ -995,40 +1007,40 @@ Formula: logical_pass ~ condition + d_average + WMC_composite + HMT_score +
 Control: glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+05))
 
       AIC       BIC    logLik -2*log(L)  df.resid 
-   1920.4    1980.0    -949.2    1898.4      1645 
+   1643.5    1701.5    -810.8    1621.5      1429 
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--2.0401 -0.6390 -0.4085  0.7581  3.0426 
+-2.1726 -0.6248 -0.4092  0.6910  3.0933 
 
 Random effects:
  Groups Name            Variance Std.Dev. Corr
- id     (Intercept)     0.3397   0.5828       
-        conditionmiddle 0.4477   0.6691   0.19
-Number of obs: 1656, groups:  id, 69
+ id     (Intercept)     0.3382   0.5816       
+        conditionmiddle 0.3851   0.6205   0.52
+Number of obs: 1440, groups:  id, 60
 
 Fixed effects:
-                               Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)                   -0.373546   0.530321  -0.704 0.481198    
-conditionmiddle                1.668842   0.688945   2.422 0.015422 *  
-d_average                      2.104858   0.601070   3.502 0.000462 ***
-WMC_composite                 -0.008528   0.010663  -0.800 0.423838    
-HMT_score                     -0.196672   0.096496  -2.038 0.041537 *  
-conditionmiddle:d_average     -0.338456   0.782779  -0.432 0.665467    
-conditionmiddle:HMT_score     -0.072280   0.123528  -0.585 0.558460    
-conditionmiddle:WMC_composite  0.001546   0.013735   0.113 0.910377    
+                                Estimate Std. Error z value Pr(&gt;|z|)   
+(Intercept)                   -0.6457628  0.5745044  -1.124  0.26100   
+conditionmiddle                2.1927732  0.7281395   3.011  0.00260 **
+d_average                      2.7505874  0.9934958   2.769  0.00563 **
+WMC_composite                 -0.0100584  0.0116008  -0.867  0.38592   
+HMT_score                     -0.1559867  0.1026421  -1.520  0.12858   
+conditionmiddle:d_average     -0.9025711  1.2476933  -0.723  0.46944   
+conditionmiddle:HMT_score     -0.1473014  0.1280844  -1.150  0.25013   
+conditionmiddle:WMC_composite  0.0001065  0.0146059   0.007  0.99418   
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
             (Intr) cndtnm d_avrg WMC_cm HMT_sc cndt:_ c:HMT_
-conditnmddl -0.366                                          
-d_average   -0.177  0.064                                   
-WMC_compost -0.565  0.207 -0.161                            
-HMT_score   -0.443  0.164  0.122 -0.431                     
-cndtnmddl:_  0.064 -0.168 -0.364  0.057 -0.029              
-cndtnm:HMT_  0.166 -0.450 -0.030  0.172 -0.400  0.130       
-cndtnm:WMC_  0.209 -0.570  0.057 -0.381  0.172 -0.167 -0.424</code></pre>
+conditnmddl -0.271                                          
+d_average   -0.287  0.088                                   
+WMC_compost -0.518  0.133 -0.244                            
+HMT_score   -0.457  0.130  0.255 -0.447                     
+cndtnmddl:_  0.090 -0.266 -0.292  0.074 -0.068              
+cndtnm:HMT_  0.131 -0.458 -0.067  0.139 -0.311  0.241       
+cndtnm:WMC_  0.133 -0.533  0.073 -0.286  0.139 -0.241 -0.434</code></pre>
 </div>
 </div>
 <p><strong>Z-transform continuous predictors for the ease of interpretation:</strong></p>
@@ -1078,34 +1090,34 @@ Formula: logical_pass ~ condition + noise_z + WMC_z + HMT_z + (1 + condition |
 Control: glmerControl(optimizer = "bobyqa", optCtrl = list(maxfun = 1e+05))
 
       AIC       BIC    logLik -2*log(L)  df.resid 
-   1914.9    1958.2    -949.5    1898.9      1648 
+   1639.4    1681.6    -811.7    1623.4      1432 
 
 Scaled residuals: 
     Min      1Q  Median      3Q     Max 
--2.0414 -0.6423 -0.4068  0.7540  3.0866 
+-2.1513 -0.6213 -0.4026  0.6888  3.2129 
 
 Random effects:
  Groups Name            Variance Std.Dev. Corr
- id     (Intercept)     0.3410   0.5839       
-        conditionmiddle 0.4534   0.6734   0.18
-Number of obs: 1656, groups:  id, 69
+ id     (Intercept)     0.3436   0.5862       
+        conditionmiddle 0.4181   0.6466   0.47
+Number of obs: 1440, groups:  id, 60
 
 Fixed effects:
                 Estimate Std. Error z value Pr(&gt;|z|)    
-(Intercept)     -1.33748    0.11798 -11.336  &lt; 2e-16 ***
-conditionmiddle  1.34495    0.14704   9.147  &lt; 2e-16 ***
-noise_z          0.36818    0.10224   3.601 0.000317 ***
-WMC_z           -0.09134    0.11199  -0.816 0.414686    
-HMT_z           -0.28045    0.11387  -2.463 0.013780 *  
+(Intercept)      -1.4091     0.1289 -10.933  &lt; 2e-16 ***
+conditionmiddle   1.3715     0.1580   8.682  &lt; 2e-16 ***
+noise_z           0.3210     0.1206   2.661  0.00779 ** 
+WMC_z            -0.1119     0.1269  -0.882  0.37779    
+HMT_z            -0.2566     0.1322  -1.940  0.05234 .  
 ---
 Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 
 Correlation of Fixed Effects:
             (Intr) cndtnm nois_z WMC_z 
-conditnmddl -0.455                     
-noise_z     -0.076  0.056              
-WMC_z        0.013 -0.011 -0.164       
-HMT_z        0.084 -0.062  0.140 -0.425</code></pre>
+conditnmddl -0.381                     
+noise_z     -0.071  0.044              
+WMC_z        0.031 -0.023 -0.239       
+HMT_z        0.100 -0.080  0.267 -0.431</code></pre>
 </div>
 </div>
 <p>Predictor coefficients:</p>
@@ -1113,11 +1125,11 @@ HMT_z        0.084 -0.062  0.140 -0.425</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb70-1"><a href="#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">coef</span>(<span class="fu">summary</span>(glmm_z_condition_noise_WMC_Gf)),<span class="dv">2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                Estimate Std. Error z value Pr(&gt;|z|)
-(Intercept)        -1.34       0.12  -11.34     0.00
-conditionmiddle     1.34       0.15    9.15     0.00
-noise_z             0.37       0.10    3.60     0.00
-WMC_z              -0.09       0.11   -0.82     0.41
-HMT_z              -0.28       0.11   -2.46     0.01</code></pre>
+(Intercept)        -1.41       0.13  -10.93     0.00
+conditionmiddle     1.37       0.16    8.68     0.00
+noise_z             0.32       0.12    2.66     0.01
+WMC_z              -0.11       0.13   -0.88     0.38
+HMT_z              -0.26       0.13   -1.94     0.05</code></pre>
 </div>
 </div>
 <p>Odds ratios (OR) of predictors:</p>
@@ -1125,11 +1137,11 @@ HMT_z              -0.28       0.11   -2.46     0.01</code></pre>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_or_table</span>(glmm_z_condition_noise_WMC_Gf)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>                   OR Lower Upper
-(Intercept)     0.263 0.208 0.331
-conditionmiddle 3.838 2.877 5.120
-noise_z         1.445 1.183 1.766
-WMC_z           0.913 0.733 1.137
-HMT_z           0.755 0.604 0.944</code></pre>
+(Intercept)     0.244 0.190 0.315
+conditionmiddle 3.941 2.892 5.372
+noise_z         1.379 1.088 1.746
+WMC_z           0.894 0.697 1.147
+HMT_z           0.774 0.597 1.003</code></pre>
 </div>
 </div>
 <p><strong>Exploratory analysis</strong>: Did Gf scores differ significantly between participants who correctly identified the logic of the mathematical notations and those who did not?</p>
@@ -1142,7 +1154,7 @@ HMT_z           0.755 0.604 0.944</code></pre>
 <pre><code># A tibble: 1 × 2
   mean_Gf sd_Gf
     &lt;dbl&gt; &lt;dbl&gt;
-1     4.5  1.26</code></pre>
+1    4.46  1.30</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>noise_illogical_WMC_Gf_aggregated <span class="sc">|&gt;</span> </span>
 <span id="cb76-2"><a href="#cb76-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(get_logic <span class="sc">==</span> <span class="st">"TRUE"</span>) <span class="sc">|&gt;</span> </span>
@@ -1152,7 +1164,7 @@ HMT_z           0.755 0.604 0.944</code></pre>
 <pre><code># A tibble: 1 × 2
   mean_Gf sd_Gf
     &lt;dbl&gt; &lt;dbl&gt;
-1    5.47  1.13</code></pre>
+1    5.42  1.24</code></pre>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">t.test</span>(HMT_score <span class="sc">~</span> get_logic, <span class="at">data =</span> noise_illogical_WMC_Gf_aggregated)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
@@ -1160,13 +1172,13 @@ HMT_z           0.755 0.604 0.944</code></pre>
     Welch Two Sample t-test
 
 data:  HMT_score by get_logic
-t = -2.8678, df = 24.57, p-value = 0.00836
+t = -2.3695, df = 17.607, p-value = 0.02947
 alternative hypothesis: true difference in means between group FALSE and group TRUE is not equal to 0
 95 percent confidence interval:
- -1.6615025 -0.2718308
+ -1.8094161 -0.1072506
 sample estimates:
 mean in group FALSE  mean in group TRUE 
-           4.500000            5.466667 </code></pre>
+           4.458333            5.416667 </code></pre>
 </div>
 </div>
 </section>

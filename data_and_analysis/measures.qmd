@@ -14,7 +14,7 @@ if (!requireNamespace("pacman", quietly = TRUE)) {
   install.packages("pacman")
 } 
 library("pacman")
-p_load(tidyverse, psych, corrplot, lme4)
+p_load(tidyverse, psych, corrplot, lme4, mirt)
 
 options(digits = 4)
 
@@ -84,6 +84,12 @@ df_HMT <- read.csv(here::here("data_and_analysis", "data",
                               "df_HMT.csv")) |>  
   select(id, HMT_score = no_correct) |>  
   filter(id %in% WMC_result$id) 
+
+HMT_item_matrix <- read.csv(here::here("data_and_analysis", "data", 
+                              "part4_WMC_Gf", 
+                              "df_HMT.csv")) |>  
+  filter(id %in% WMC_result$id) |> 
+  select(-id, -no_correct) 
 ```
 
 ### **The Estimated Noise Parameter :**
@@ -314,3 +320,5 @@ df_HMT_WMC <- df_HMT |>
 
 cor.test(df_HMT_WMC$HMT_score, df_HMT_WMC$composite_score)
 ```
+
+#### 
