@@ -69,8 +69,8 @@ exclusion_noise <-read.csv(here::here("data_and_analysis", "data",
 ))
 
 df_noise_conjdisj <- df_noise_conjdisj |> 
- filter(! id %in% exclusion_noise$id) |> #153 participants  
- filter(d_average >= 0 & d_average <= 0.5)
+ filter(! id %in% exclusion_noise$id) #|> #153 participants  
+ #filter(d_average >= 0 & d_average <= 0.5)
 
 #part 3: excluding 8 (who translated German to English when performing the experiment) 
 # + 8(who failed the comprehension check question) = 16 participants
@@ -227,12 +227,12 @@ lower_lm <- function(data, mapping,
 #  plot = p1,
 #  width = 6.4, height = 6.4
 #)
-ggsave(
-  filename = file.path(plots_dir, "noise_ranking_conjdisj_exclu.png"),
-  plot = p1,
-  width = 6.4, height = 6.4,
-  dpi = 300
-)
+#ggsave(
+#  filename = file.path(plots_dir, "noise_ranking_conjdisj.png"),
+#  plot = p1,
+#  width = 6.4, height = 6.4,
+#  dpi = 300
+#)
 ```
 
 Statistical modelling:
@@ -482,12 +482,12 @@ custom_labels_noise_illogical_WMC <- c(
 #  plot = p2,
 #  width = 7, height = 7
 #)
-ggsave(
-  filename = file.path(plots_dir, "noise_illogical_HMT_WMC_exclu.png"),
-  plot = p2,
-  width = 7, height = 7,
-  dpi=300
-)
+#ggsave(
+#  filename = file.path(plots_dir, "noise_illogical_HMT_WMC.png"),
+#  plot = p2,
+#  width = 7, height = 7,
+#  dpi=300
+#)
 ```
 
 **Pearson correlation** between the number of illogical rankings and Gf score(HMT_score; the score for the HMT task)
