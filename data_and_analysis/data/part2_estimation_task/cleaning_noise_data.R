@@ -111,8 +111,7 @@ data_join <- data_join |>
          z1_eventset6 = (`6a` + `6bNnota` - `6aORb`)/100,
          z1_eventset7 = (`7a` + `7bNnota` - `7aORb`)/100,
          z1_eventset8 = (`8a` + `8bNnota` - `8aORb`)/100,
-         z1_d = (z1_eventset1 + z1_eventset2 + z1_eventset3 + z1_eventset4 + 
-                   z1_eventset5 + z1_eventset6 + z1_eventset7 + z1_eventset8)/8,
+         
          z2_eventset1 = (`1b` + `1aNnotb` - `1aORb`)/100,
          z2_eventset2 = (`2b` + `2aNnotb` - `2aORb`)/100,
          z2_eventset3 = (`3b` + `3aNnotb` - `3aORb`)/100,
@@ -121,8 +120,7 @@ data_join <- data_join |>
          z2_eventset6 = (`6b` + `6aNnotb` - `6aORb`)/100,
          z2_eventset7 = (`7b` + `7aNnotb` - `7aORb`)/100,
          z2_eventset8 = (`8b` + `8aNnotb` - `8aORb`)/100,
-         z2_d = (z2_eventset1 + z2_eventset2 + z2_eventset3 + z2_eventset4 + 
-                   z2_eventset5 + z2_eventset6 + z2_eventset7 + z2_eventset8)/8,
+
          z3_eventset1 = (`1aNnotb` + `1aNb` - `1a`)/100,
          z3_eventset2 = (`2aNnotb` + `2aNb` - `2a`)/100,
          z3_eventset3 = (`3aNnotb` + `3aNb` - `3a`)/100,
@@ -131,8 +129,7 @@ data_join <- data_join |>
          z3_eventset6 = (`6aNnotb` + `6aNb` - `6a`)/100,
          z3_eventset7 = (`7aNnotb` + `7aNb` - `7a`)/100,
          z3_eventset8 = (`8aNnotb` + `8aNb` - `8a`)/100,
-         z3_d = (z3_eventset1 + z3_eventset2 + z3_eventset3 + z3_eventset4 + 
-                   z3_eventset5 + z3_eventset6 + z3_eventset7 + z3_eventset8)/8,
+   
          z4_eventset1 = (`1bNnota` + `1aNb` - `1b`)/100,
          z4_eventset2 = (`2bNnota` + `2aNb` - `2b`)/100,
          z4_eventset3 = (`3bNnota` + `3aNb` - `3b`)/100,
@@ -141,8 +138,7 @@ data_join <- data_join |>
          z4_eventset6 = (`6bNnota` + `6aNb` - `6b`)/100,
          z4_eventset7 = (`7bNnota` + `7aNb` - `7b`)/100,
          z4_eventset8 = (`8bNnota` + `8aNb` - `8b`)/100,
-         z4_d = (z4_eventset1 + z4_eventset2 + z4_eventset3 + z4_eventset4 + 
-                   z4_eventset5 + z4_eventset6 + z4_eventset7 + z4_eventset8)/8,
+
          z5_eventset1 = (`1aNnotb` + `1bNnota` + `1aNb` - `1aORb`)/2/100,
          z5_eventset2 = (`2aNnotb` + `2bNnota` + `2aNb` - `2aORb`)/2/100,
          z5_eventset3 = (`3aNnotb` + `3bNnota` + `3aNb` - `3aORb`)/2/100,
@@ -151,8 +147,7 @@ data_join <- data_join |>
          z5_eventset6 = (`6aNnotb` + `6bNnota` + `6aNb` - `6aORb`)/2/100,
          z5_eventset7 = (`7aNnotb` + `7bNnota` + `7aNb` - `7aORb`)/2/100,
          z5_eventset8 = (`8aNnotb` + `8bNnota` + `8aNb` - `8aORb`)/2/100,
-         z5_d = (z5_eventset1 + z5_eventset2 + z5_eventset3 + z5_eventset4 + 
-                   z5_eventset5 + z5_eventset6 + z5_eventset7 + z5_eventset8)/8,
+
          z6_eventset1 = (`1aNnotb` + `1bNnota` + `1aNb` + `1aNb` - `1a` - `1b`)/2/100,
          z6_eventset2 = (`2aNnotb` + `2bNnota` + `2aNb` + `2aNb` - `2a` - `2b`)/2/100,
          z6_eventset3 = (`3aNnotb` + `3bNnota` + `3aNb` + `3aNb` - `3a` - `3b`)/2/100,
@@ -161,8 +156,44 @@ data_join <- data_join |>
          z6_eventset6 = (`6aNnotb` + `6bNnota` + `6aNb` + `6aNb` - `6a` - `6b`)/2/100,
          z6_eventset7 = (`7aNnotb` + `7bNnota` + `7aNb` + `7aNb` - `7a` - `7b`)/2/100,
          z6_eventset8 = (`8aNnotb` + `8bNnota` + `8aNb` + `8aNb` - `8a` - `8b`)/2/100,
-         z6_d = (z6_eventset1 + z6_eventset2 + z6_eventset3 + z6_eventset4 + 
-                   z6_eventset5 + z6_eventset6 + z6_eventset7 + z6_eventset8)/8) #notice that I did not take any absolute values, 
+ 
+         #X_E(A,B) = P_E(A) + P_E(B) − P_E(A∩B) − P_E(A∪B)
+         x1_eventset1 = (`1a` + `1b` - `1aNb` - `1aORb`)/100,
+         x1_eventset2 = (`2a` + `2b` - `2aNb` - `2aORb`)/100,
+         x1_eventset3 = (`3a` + `3b` - `3aNb` - `3aORb`)/100,
+         x1_eventset4 = (`4a` + `4b` - `4aNb` - `4aORb`)/100,
+         x1_eventset5 = (`5a` + `5b` - `5aNb` - `5aORb`)/100,
+         x1_eventset6 = (`6a` + `6b` - `6aNb` - `6aORb`)/100, 
+         x1_eventset7 = (`7a` + `7b` - `7aNb` - `7aORb`)/100,
+         x1_eventset8 = (`8a` + `8b` - `8aNb` - `8aORb`)/100, 
+         
+         #Y_E(A,B) = P_E(A) + P_E(B∩¬A) − P_E(B) − P_E(A∩¬B), 
+         x2_eventset1 = (`1a` + `1bNnota` - `1b` - `1aNnotb`)/100,
+         x2_eventset2 = (`2a` + `2bNnota` - `2b` - `2aNnotb`)/100,
+         x2_eventset3 = (`3a` + `3bNnota` - `3b` - `3aNnotb`)/100,
+         x2_eventset4 = (`4a` + `4bNnota` - `4b` - `4aNnotb`)/100,
+         x2_eventset5 = (`5a` + `5bNnota` - `5b` - `5aNnotb`)/100,
+         x2_eventset6 = (`6a` + `6bNnota` - `6b` - `6aNnotb`)/100,
+         x2_eventset7 = (`7a` + `7bNnota` - `7b` - `7aNnotb`)/100,
+         x2_eventset8 = (`8a` + `8bNnota` - `8b` - `8aNnotb`)/100) |> 
+  mutate(
+    z1_d = (z1_eventset1 + z1_eventset2 + z1_eventset3 + z1_eventset4 + 
+              z1_eventset5 + z1_eventset6 + z1_eventset7 + z1_eventset8)/8,
+    z2_d = (z2_eventset1 + z2_eventset2 + z2_eventset3 + z2_eventset4 + 
+              z2_eventset5 + z2_eventset6 + z2_eventset7 + z2_eventset8)/8,
+    z3_d = (z3_eventset1 + z3_eventset2 + z3_eventset3 + z3_eventset4 + 
+              z3_eventset5 + z3_eventset6 + z3_eventset7 + z3_eventset8)/8,
+    z4_d = (z4_eventset1 + z4_eventset2 + z4_eventset3 + z4_eventset4 + 
+              z4_eventset5 + z4_eventset6 + z4_eventset7 + z4_eventset8)/8,
+    z5_d = (z5_eventset1 + z5_eventset2 + z5_eventset3 + z5_eventset4 + 
+              z5_eventset5 + z5_eventset6 + z5_eventset7 + z5_eventset8)/8,
+    z6_d = (z6_eventset1 + z6_eventset2 + z6_eventset3 + z6_eventset4 + 
+              z6_eventset5 + z6_eventset6 + z6_eventset7 + z6_eventset8)/8,
+    x1_average = (x1_eventset1 + x1_eventset2 + x1_eventset3 + x1_eventset4 +
+                    x1_eventset5 + x1_eventset6 + x1_eventset7 + x1_eventset8)/8,
+    x2_average = (x2_eventset1 + x2_eventset2 + x2_eventset3 + x2_eventset4 + 
+                    x2_eventset5 + x2_eventset6 + x2_eventset7 + x2_eventset8)/8
+  ) #notice that I did not take any absolute values, 
 #I just took the averages
 
 #for each participant, calculate RMSD across the 6 estimates of d (simply SD, as the prediction is the mean)
@@ -172,7 +203,9 @@ data_d <- data_join |>
          z3_eventset1, z3_eventset2, z3_eventset3, z3_eventset4, z3_eventset5, z3_eventset6, z3_eventset7, z3_eventset8, z3_d,
          z4_eventset1, z4_eventset2, z4_eventset3, z4_eventset4, z4_eventset5, z4_eventset6, z4_eventset7, z4_eventset8, z4_d, 
          z5_eventset1, z5_eventset2, z5_eventset3, z5_eventset4, z5_eventset5, z5_eventset6, z5_eventset7, z5_eventset8, z5_d, 
-         z6_eventset1, z6_eventset2, z6_eventset3, z6_eventset4, z6_eventset5, z6_eventset6, z6_eventset7, z6_eventset8, z6_d)  |>
+         z6_eventset1, z6_eventset2, z6_eventset3, z6_eventset4, z6_eventset5, z6_eventset6, z6_eventset7, z6_eventset8, z6_d,
+         x1_eventset1, x1_eventset2, x1_eventset3, x1_eventset4, x1_eventset5, x1_eventset6, x1_eventset7, x1_eventset8, x1_average,
+         x2_eventset1, x2_eventset2, x2_eventset3, x2_eventset4, x2_eventset5, x2_eventset6, x2_eventset7, x2_eventset8, x2_average)  |>
   rowwise() |>
   mutate(
     d_average = mean(c(z1_d, z2_d, z3_d, z4_d, z5_d, z6_d)),
@@ -182,16 +215,22 @@ data_d <- data_join |>
     sd_d4=sd(c_across(c(z4_eventset1, z4_eventset2, z4_eventset3, z4_eventset4, z4_eventset5, z4_eventset6, z4_eventset7, z4_eventset8))),
     sd_d5=sd(c_across(c(z5_eventset1, z5_eventset2, z5_eventset3, z5_eventset4, z5_eventset5, z5_eventset6, z5_eventset7, z5_eventset8))),
     sd_d6=sd(c_across(c(z6_eventset1, z6_eventset2, z6_eventset3, z6_eventset4, z6_eventset5, z6_eventset6, z6_eventset7, z6_eventset8))),
-    sd_d = sd(c_across(c(z1_d, z2_d, z3_d, z4_d, z5_d, z6_d)))
+    sd_d = sd(c_across(c(z1_d, z2_d, z3_d, z4_d, z5_d, z6_d))),
+    x_average = mean(c(x1_average, x2_average)),
+    sd_x1 = sd(c_across(c(x1_eventset1, x1_eventset2, x1_eventset3, x1_eventset4, x1_eventset5, x1_eventset6, x1_eventset7, x1_eventset8))),
+    sd_x2 = sd(c_across(c(x2_eventset1, x2_eventset2, x2_eventset3, x2_eventset4, x2_eventset5, x2_eventset6, x2_eventset7, x2_eventset8))),
+    sd_x = sd(c_across(c(x1_average, x2_average)))
   ) |>
   select(id, d_average, sd_d,
          sd_d1, sd_d2, sd_d3, sd_d4, sd_d5, sd_d6,
-         z1_d, z2_d, z3_d, z4_d, z5_d, z6_d) 
+         z1_d, z2_d, z3_d, z4_d, z5_d, z6_d,
+         x_average, sd_x,
+         x1_average, x2_average,
+         sd_x1, sd_x2) 
 
 # -------------------------------------------------------------------------
 #look at the distribution of RMSD of the estimates of "d" and the distribution of the average values of  d 
 #only include participants whose RMSD d < average d ?
-
 
 ( hist_d_average <- ggplot(data_d, aes(x = d_average)) +
   geom_histogram(bins = 50, fill = "steelblue", color = "white", alpha = 0.8) + 
@@ -261,22 +300,6 @@ data_join_conj_disj <- data_join |>
          conj_8 = ifelse(`8aNb` > `8a` |`8aNb` > `8b`|
                            `8aNnotb` > `8a` | `8bNnota` > `8b`, 1, 0),
          disj_8 = ifelse(`8aORb` < `8a` |`8aORb` < `8b`, 1, 0)) |>
-         #x1 = `1a` + `1b` - `1aNb` - `1aORb`,
-         #x2 = `2a`+ `2b`- `2aNb`- `2aORb`,
-         #x3 = `3a`+ `3b`- `3aNb`- `3aORb`,
-         #x4 = `4a`+ `4b`- `4aNb`- `4aORb`,
-         #x5 = `5a`+ `5b`- `5aNb`- `5aORb`,
-         #x6 = `6a`+ `6b`- `6aNb`- `6aORb`,
-         #x7 = `7a`+ `7b`- `7aNb`- `7aORb`,
-         #x8 = `8a`+ `8b`- `8aNb`- `8aORb`,
-         #y1 = `1a`+ `1bNnota`- `1b`- `1aNnotb`, 
-         #y2 = `2a`+ `2bNnota`- `2b`- `2aNnotb`,
-         #y3 = `3a`+ `3bNnota`- `3b`- `3aNnotb`,
-         #y4 = `4a`+ `4bNnota`- `4b`- `4aNnotb`,
-         #y5 = `5a`+ `5bNnota`- `5b`- `5aNnotb`,
-         #y6 = `6a`+ `6bNnota`- `6b`- `6aNnotb`,
-         #y7 = `7a`+ `7bNnota`- `7b`- `7aNnotb`,
-         #y8 = `8a`+ `8bNnota`- `8b`- `8aNnotb`) |>
   select(id, `1a`, `1b`, `1aNb`, `1aORb`, `1aNnotb`,`1bNnota`, `1aNnotb`,`1bNnota`, conj_1, disj_1,
          `2a`, `2b`, `2aNb`, `2aORb`, `2aNnotb`,`2bNnota`, conj_2, disj_2,
          `3a`, `3b`, `3aNb`, `3aORb`, `3aNnotb`,`3bNnota`, conj_3, disj_3,
@@ -285,19 +308,15 @@ data_join_conj_disj <- data_join |>
          `6a`, `6b`, `6aNb`, `6aORb`, `6aNnotb`,`6bNnota`, conj_6, disj_6,
          `7a`, `7b`, `7aNb`, `7aORb`, `7aNnotb`,`7bNnota`, conj_7, disj_7,
          `8a`, `8b`, `8aNb`, `8aORb`, `8aNnotb`,`8bNnota`, conj_8, disj_8) |>
-          #x1 ,x2 ,x3 ,x4 ,x5 ,x6 ,x7, x8,
-          #y1, y2, y3, y4, y5, y6, y7, y8) |> 
   mutate(number_conj = conj_1 + conj_2+ conj_3+ conj_4+ conj_5+ conj_6+ conj_7+ conj_8,
          number_disj = disj_1 + disj_2+ disj_3+ disj_4+ disj_5+ disj_6+ disj_7+ disj_8) |> 
-         #mean_x = (x1 +x2 +x3 +x4 +x5 +x6 +x7 +x8) / 8,
-         #mean_y = (y1 +y2 +y3 +y4 +y5 +y6 +y7 +y8) / 8)  |> 
   mutate(number_conj_disj = number_conj + number_disj)
-         #mean_xy = mean_x + mean_y)
 
 # combining the two data sets  --------------------------------------------
 
 data_d <- data_d |> 
-  select(id, z1_d, z2_d, z3_d, z4_d, z5_d, z6_d, d_average, sd_d)
+  select(id, z1_d, z2_d, z3_d, z4_d, z5_d, z6_d, d_average, sd_d,
+         x1_average, x2_average,x_average, sd_x)
 
 d_conj_disj_combined <- data_join_conj_disj |>
   left_join(data_d, by = "id") 

@@ -5,6 +5,8 @@ editor: visual
 format:
   html:
     toc: true
+    embed-resources: true
+    self-contained-math: true
 ---
 
 R preparation
@@ -112,7 +114,8 @@ Demographic information:
 
 ```{r}
 data_demo <- read.csv(here::here("data_and_analysis",
-                                         "data", "part3_ranking_task", 
+                                         "data", 
+                                 "part3_ranking_task", 
                                    "data_demo.csv"))
 
 data_demo_RQ1 <- data_demo |> 
@@ -121,10 +124,11 @@ data_demo_RQ1 <- data_demo |>
 data_demo_RQ1 |> group_by(gender) |> count() 
 
 data_demo_RQ1 |> 
- summarise(
+  summarise(
     mean_age = mean(age),
     sd_age = sd(age),
-    range_age = range(age)
+    min_age = min(age),
+    max_age = max(age)
   )
 
 data_demo_RQ2 <- data_demo |> 
@@ -136,7 +140,8 @@ data_demo_RQ2 |>
  summarise(
     mean_age = mean(age),
     sd_age = sd(age),
-    range_age = range(age)
+    min_age = min(age),
+    max_age = max(age)
   )
 ```
 
@@ -224,11 +229,6 @@ lower_lm <- function(data, mapping,
 #save the plot
 #ggsave(
 #  filename = file.path(plots_dir, "noise_ranking_conjdisj.pdf"),
-#  plot = p1,
-#  width = 6.4, height = 6.4
-#)
-#ggsave(
-#  filename = file.path(plots_dir, "noise_ranking_conjdisj.png"),
 #  plot = p1,
 #  width = 6.4, height = 6.4,
 #  dpi = 300
@@ -479,11 +479,6 @@ custom_labels_noise_illogical_WMC <- c(
 #save the plot
 #ggsave(
 #  filename = file.path(plots_dir, "noise_illogical_HMT_WMC.pdf"),
-#  plot = p2,
-#  width = 7, height = 7
-#)
-#ggsave(
-#  filename = file.path(plots_dir, "noise_illogical_HMT_WMC.png"),
 #  plot = p2,
 #  width = 7, height = 7,
 #  dpi=300
