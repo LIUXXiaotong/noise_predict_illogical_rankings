@@ -16,7 +16,7 @@ if (!requireNamespace("pacman", quietly = TRUE)) {
   install.packages("pacman")
 } 
 library("pacman")
-p_load(tidyverse, psych, corrplot, lme4, mirt)
+p_load(tidyverse, here, psych, corrplot, lme4, mirt)
 
 options(digits = 4)
 
@@ -25,13 +25,15 @@ exclusion_noise <-read.csv(here::here("data_and_analysis", "data",
                                       "exclusion_part2_IDs.csv"
 ))
 
+
+
 #if the data cannot be read, try df_noise <- read.csv(here::here("data",
 #                                         "part2_estimation_task",
 #                                         "noise_conj_disj.csv"))
 df_noise <- read.csv(here::here("data_and_analysis", "data",
                                          "part2_estimation_task",
-                                         "noise_conj_disj.csv")) #|> 
-  #filter(! id %in% exclusion_noise$id)
+                                         "noise_conj_disj.csv")) |> 
+  filter(! id %in% exclusion_noise$id)
 
 exclusion_ranking <- read.csv(here::here("data_and_analysis",
                                          "data", "part3_ranking_task", 
@@ -187,6 +189,18 @@ We also looked at the above statistics in the subsample for Research Question 2,
 ```{r}
 df_noise_RQ2 <- df_noise |> 
   filter(id %in% df_HMT$id) 
+```
+
+#### Testing predictions for normative probabilistic expressions X1-X2:
+
+```{r}
+t.test(df_noise_RQ1$x1_average,  mu = 0)
+t.test(df_noise_RQ1$x2_average, mu = 0)
+t.test(df_noise$x_average, mu = 0)
+```
+
+```{r}
+
 ```
 
 ### Illogical rankings :
