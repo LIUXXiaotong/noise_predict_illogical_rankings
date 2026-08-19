@@ -5,6 +5,8 @@ editor: visual
 format:
   html:
     toc: true
+    embed-resources: true
+    self-contained-math: true
 ---
 
 ### **R preparation**
