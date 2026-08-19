@@ -9,7 +9,7 @@ format:
     self-contained-math: true
 ---
 
-### **R preparation**
+### R preparation
 
 ```{r}
 if (!requireNamespace("pacman", quietly = TRUE)) { 
@@ -94,7 +94,7 @@ HMT_item_matrix <- read.csv(here::here("data_and_analysis", "data",
   select(-id, -no_correct) 
 ```
 
-### **The Estimated Noise Parameter :**
+### The Estimated Noise Parameter :
 
 Using participants' probability estimates from Part 2, we applied, for each participant and each weather-condition pair, six probabilistic expressions (z1 to z6) to calculate estimates of d. For each expression, we averaged estimates across weather-condition pairs to obtain one expression-specific estimate (z1_d, z2_d, ... z6_d). We then averaged six expression-specific estimates to form a composite estimate of each participant's noise parameter (d_average).
 
@@ -189,7 +189,7 @@ df_noise_RQ2 <- df_noise |>
   filter(id %in% df_HMT$id) 
 ```
 
-### **Illogical rankings :**
+### Illogical rankings :
 
 #### Descriptive statistics
 
@@ -307,7 +307,8 @@ alpha_sspan$total
 df_HMT |> 
   summarise(mean = mean(HMT_score),
             sd = sd(HMT_score),
-            range = range(HMT_score))
+            max = max(HMT_score),
+            min = min(HMT_score))
 
 hist(df_HMT$HMT_score)
 
