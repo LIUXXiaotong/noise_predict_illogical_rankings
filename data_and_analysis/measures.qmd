@@ -16,7 +16,7 @@ if (!requireNamespace("pacman", quietly = TRUE)) {
   install.packages("pacman")
 } 
 library("pacman")
-p_load(tidyverse, here, psych, corrplot, lme4, mirt)
+p_load(tidyverse, here, psych, corrplot, lme4, mirt, BayesFactor)
 
 options(digits = 4)
 
@@ -195,12 +195,18 @@ df_noise_RQ2 <- df_noise |>
 
 ```{r}
 t.test(df_noise_RQ1$x1_average,  mu = 0)
-t.test(df_noise_RQ1$x2_average, mu = 0)
-t.test(df_noise$x_average, mu = 0)
+t.test(df_noise_RQ1$x1_average, mu = 0)$p.value
+t.test(df_noise_RQ1$x1_average, mu = 0)$statistic
 ```
 
 ```{r}
+t.test(df_noise_RQ1$x2_average, mu = 0)
+t.test(df_noise_RQ1$x2_average, mu = 0)$p.value
+t.test(df_noise_RQ1$x2_average, mu = 0)$statistic
+```
 
+```{r}
+t.test(df_noise$x_average, mu = 0)
 ```
 
 ### Illogical rankings :
