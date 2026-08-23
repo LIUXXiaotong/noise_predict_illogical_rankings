@@ -179,7 +179,8 @@ aggregated_noise_illogical <- df_ranking_aggregated |>
          z3_d,
          z4_d,
          z5_d,
-         z6_d) #125 participants 
+         z6_d,
+         ) #125 participants 
 
 #descriptive statistics 
 ( summary_table <- aggregated_noise_illogical |>
@@ -194,18 +195,14 @@ aggregated_noise_illogical <- df_ranking_aggregated |>
   mutate(across(everything(), ~round(.x, 2))))
 
 #illogical rankings grouped by event-set condition 
-df_ranking_by_condition <- df_ranking |> 
-  group_by(id, condition) |> 
-  mutate(number_logical = sum(logical_pass)) |> 
-  dplyr::select(id, condition, number_logical) |> 
-  unique()
+df_ranking_by_condition <- df_ranking |>
+  group_by(id, condition) |>
+  summarise(number_logical = sum(logical_pass), .groups = "drop")
 
-summary_table2 <- df_ranking_by_condition |> 
-  group_by(condition) |> 
+df_ranking_by_condition |>
+  group_by(condition) |>
   summarise(mean_no_logical = mean(number_logical),
-            sd_no_logical = sd(number_logical))
-
-summary_table2
+            sd_no_logical   = sd(number_logical))
 ```
 
 ```{r}
@@ -429,6 +426,30 @@ likelihood ratio test:
 
 ```{r}
 lrtest(glmm_condition, glmm_condition_noise)
+```
+
+**Exploratory analysis**: double conjunction fallacy
+
+```{r}
+n_total <- nrow(noise_illogical_WMC_Gf_aggregated)
+
+desc <- noise_illogical_WMC_Gf_aggregated |>
+  summarise(
+    n            = n(),
+    mean_count   = mean(number_double_conj, na.rm = TRUE),
+    sd_count     = sd(number_double_conj, na.rm = TRUE),
+    median_count = median(number_double_conj, na.rm = TRUE),
+    min_count    = min(number_double_conj, na.rm = TRUE),
+    max_count    = max(number_double_conj, na.rm = TRUE),
+    n_any        = sum(number_double_conj > 0, na.rm = TRUE),   # made >= 1 fallacy
+    prop_any     = mean(number_double_conj > 0, na.rm = TRUE)   # proportion
+  )
+print(desc)
+
+
+test1 <- binom.test(n_any, n_total, p = 0.5, alternative = "greater")
+print(test1)
+
 ```
 
 ## Research Question 2
@@ -716,7 +737,7 @@ Gf_z <- function(var, data, xvar = "HMT_score",
     geom_smooth(method = "lm", se = TRUE,
                 color = "#2297E6", fill = "#2297E6", alpha = 0.1) +
     annotate("text",
-             x = -Inf, y = Inf, hjust = -0.2, vjust = 1.5,
+             x = -Inf, y = 0.7, hjust = -0.2, vjust = 1.5,
              label = r_label(data[[xvar]], data[[var]]),
              parse = TRUE,
              size = 3.5, color = "#D55E00", fontface = "bold") +
@@ -737,16 +758,14 @@ names(plots_Gf) <- c("z1_d", "z2_d", "z3_d",
 
 p_gf  <- wrap_plots(plots_Gf[paste0("z", 1:6, "_d")],  ncol = 3)
 
-(wrap_elements(p_wmc) / wrap_elements(p_gf)) +
+p_gf_wmc <- (wrap_elements(p_wmc) / wrap_elements(p_gf)) +
   plot_annotation(tag_levels = "A") &
   theme(plot.tag = element_text(face = "bold", size = 12))
 
-ggsave("z1_6_wmc_gf.pdf", width = 7, height = 7)
-
-```
-
-**Exploratory analysis**: double conjunction fallacy
-
-```{r}
+ggsave(
+  filename = file.path(plots_dir, "z1_z6_wmc_gf.pdf"),
+  plot = p_gf_wmc,
+  width = 7, height = 7,
+)
 
 ```
