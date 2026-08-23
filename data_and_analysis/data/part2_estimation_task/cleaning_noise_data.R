@@ -24,8 +24,8 @@ p_load(tidyverse, jsonlite, psych, ggridges, knitr, kableExtra, corrplot, gridEx
 #  left_join(mapping, by = c("prolific_ID_url" = "prolific_id")) |> 
 #  rename(id = anon_id) |>
 #  relocate(id, .before = everything()) |> 
-#  select(-prolific_ID_url, -session_ID, -study_ID, -timestamp, -meta.location) |> 
-#  select(-starts_with("...")) 
+#  dplyr::select(-prolific_ID_url, -session_ID, -study_ID, -timestamp, -meta.location) |> 
+#  dplyr::select(-starts_with("...")) 
 #save(data0, file = "part2_estimation_task.RData")
 load("part2_estimation_task.RData")
 
@@ -39,7 +39,7 @@ data <- data0 |>
   mutate(count_commas = str_count(labelling, ",")) 
 
 #select useful rows and columns for data analysis 
-data <- data |> select(id, sender, answer, labelling, count_commas) |>
+data <- data |> dplyr::select(id, sender, answer, labelling, count_commas) |>
   filter(sender == "show_events") 
 
 #split the data set according to the number of labels (commas) assigned to the probabilistic event 
@@ -198,7 +198,7 @@ data_join <- data_join |>
 
 #for each participant, calculate RMSD across the 6 estimates of d (simply SD, as the prediction is the mean)
 data_d <- data_join |> 
-  select(id, z1_eventset1, z1_eventset2, z1_eventset3, z1_eventset4, z1_eventset5, z1_eventset6, z1_eventset7, z1_eventset8, z1_d, 
+  dplyr::select(id, z1_eventset1, z1_eventset2, z1_eventset3, z1_eventset4, z1_eventset5, z1_eventset6, z1_eventset7, z1_eventset8, z1_d, 
          z2_eventset1, z2_eventset2, z2_eventset3, z2_eventset4, z2_eventset5, z2_eventset6, z2_eventset7, z2_eventset8, z2_d, 
          z3_eventset1, z3_eventset2, z3_eventset3, z3_eventset4, z3_eventset5, z3_eventset6, z3_eventset7, z3_eventset8, z3_d,
          z4_eventset1, z4_eventset2, z4_eventset3, z4_eventset4, z4_eventset5, z4_eventset6, z4_eventset7, z4_eventset8, z4_d, 
@@ -221,7 +221,7 @@ data_d <- data_join |>
     sd_x2 = sd(c_across(c(x2_eventset1, x2_eventset2, x2_eventset3, x2_eventset4, x2_eventset5, x2_eventset6, x2_eventset7, x2_eventset8))),
     sd_x = sd(c_across(c(x1_average, x2_average)))
   ) |>
-  select(id, d_average, sd_d,
+  dplyr::select(id, d_average, sd_d,
          sd_d1, sd_d2, sd_d3, sd_d4, sd_d5, sd_d6,
          z1_d, z2_d, z3_d, z4_d, z5_d, z6_d,
          x_average, sd_x,
@@ -271,51 +271,89 @@ grid.arrange(hist_d_average, hist_sd_d, ncol = 1)
       #   pass_z6 = ifelse(z6_d >= sd_d6, 1, 0),
        #  pass_sd = ifelse(abs(d_average) >= sd_d, 1, 0)) |>  #28 participants being excluded
   #filter(pass_sd == 1)  |> #28 participants being excluded 
-  #select(-pass_z1, -pass_z2, -pass_z3, -pass_z4, -pass_z5, -pass_z6, -pass_sd) 
+  #dplyr::select(-pass_z1, -pass_z2, -pass_z3, -pass_z4, -pass_z5, -pass_z6, -pass_sd) 
 
 
 # conjunction and disjunction fallacy -------------------------------------
 data_join_conj_disj <- data_join |> 
-  mutate(conj_1 = ifelse(`1aNb` > `1a` |`1aNb` > `1b` | 
-                           `1aNnotb` > `1a` | `1bNnota` > `1b`, 1, 0),
-         disj_1 = ifelse(`1aORb` < `1a` |`1aORb` < `1b`, 1, 0),
-         conj_2 = ifelse(`2aNb` > `2a` |`2aNb` > `2b`|
-                           `2aNnotb` > `2a` | `2bNnota` > `2b`, 1, 0),
-         disj_2 = ifelse(`2aORb` < `2a` |`2aORb` < `2b`, 1, 0),
-         conj_3 = ifelse(`3aNb` > `3a` |`3aNb` > `3b`|
-                           `3aNnotb` > `3a` | `3bNnota` > `3b`, 1, 0),
-         disj_3 = ifelse(`3aORb` < `3a` |`3aORb` < `3b`, 1, 0),
-         conj_4 = ifelse(`4aNb` > `4a` |`4aNb` > `4b`|
-                           `4aNnotb` > `4a` | `4bNnota` > `4b`, 1, 0),
-         disj_4 = ifelse(`4aORb` < `4a` |`4aORb` < `4b`, 1, 0),
-         conj_5 = ifelse(`5aNb` > `5a` |`5aNb` > `5b`|
-                           `5aNnotb` > `5a` | `5bNnota` > `5b`, 1, 0),
-         disj_5 = ifelse(`5aORb` < `5a` |`5aORb` < `5b`, 1, 0),
-         conj_6 = ifelse(`6aNb` > `6a` |`6aNb` > `6b`|
-                           `6aNnotb` > `6a` | `6bNnota` > `6b`, 1, 0),
-         disj_6 = ifelse(`6aORb` < `6a` |`6aORb` < `6b`, 1, 0),
-         conj_7 = ifelse(`7aNb` > `7a` |`7aNb` > `7b`|
-                           `7aNnotb` > `7a` | `7bNnota` > `7b`, 1, 0),
-         disj_7 = ifelse(`7aORb` < `7a` |`7aORb` < `7b`, 1, 0),
-         conj_8 = ifelse(`8aNb` > `8a` |`8aNb` > `8b`|
-                           `8aNnotb` > `8a` | `8bNnota` > `8b`, 1, 0),
-         disj_8 = ifelse(`8aORb` < `8a` |`8aORb` < `8b`, 1, 0)) |>
-  select(id, `1a`, `1b`, `1aNb`, `1aORb`, `1aNnotb`,`1bNnota`, `1aNnotb`,`1bNnota`, conj_1, disj_1,
-         `2a`, `2b`, `2aNb`, `2aORb`, `2aNnotb`,`2bNnota`, conj_2, disj_2,
-         `3a`, `3b`, `3aNb`, `3aORb`, `3aNnotb`,`3bNnota`, conj_3, disj_3,
-         `4a`, `4b`, `4aNb`, `4aORb`, `4aNnotb`,`4bNnota`, conj_4, disj_4,
-         `5a`, `5b`, `5aNb`, `5aORb`, `5aNnotb`,`5bNnota`, conj_5, disj_5,
-         `6a`, `6b`, `6aNb`, `6aORb`, `6aNnotb`,`6bNnota`, conj_6, disj_6,
-         `7a`, `7b`, `7aNb`, `7aORb`, `7aNnotb`,`7bNnota`, conj_7, disj_7,
-         `8a`, `8b`, `8aNb`, `8aORb`, `8aNnotb`,`8bNnota`, conj_8, disj_8) |>
+  mutate(
+    # pair 1
+    conj_1 = ifelse(`1aNb` > `1a` | `1aNb` > `1b` | 
+                      `1aNnotb` > `1a` | `1bNnota` > `1b`, 1, 0),
+    conj_1_double = ifelse(`1aNb` > `1a` & `1aNb` > `1b`, 1, 0),
+    disj_1 = ifelse(`1aORb` < `1a` | `1aORb` < `1b`, 1, 0),
+    disj_1_double = ifelse(`1aORb` < `1a` & `1aORb` < `1b`, 1, 0),
+    
+    # pair 2
+    conj_2 = ifelse(`2aNb` > `2a` | `2aNb` > `2b` |
+                      `2aNnotb` > `2a` | `2bNnota` > `2b`, 1, 0),
+    conj_2_double = ifelse(`2aNb` > `2a` & `2aNb` > `2b`, 1, 0),
+    disj_2 = ifelse(`2aORb` < `2a` | `2aORb` < `2b`, 1, 0),
+    disj_2_double = ifelse(`2aORb` < `2a` & `2aORb` < `2b`, 1, 0),
+    
+    # pair 3
+    conj_3 = ifelse(`3aNb` > `3a` | `3aNb` > `3b` |
+                      `3aNnotb` > `3a` | `3bNnota` > `3b`, 1, 0),
+    conj_3_double = ifelse(`3aNb` > `3a` & `3aNb` > `3b`, 1, 0),
+    disj_3 = ifelse(`3aORb` < `3a` | `3aORb` < `3b`, 1, 0),
+    disj_3_double = ifelse(`3aORb` < `3a` & `3aORb` < `3b`, 1, 0),
+    
+    # pair 4
+    conj_4 = ifelse(`4aNb` > `4a` | `4aNb` > `4b` |
+                      `4aNnotb` > `4a` | `4bNnota` > `4b`, 1, 0),
+    conj_4_double = ifelse(`4aNb` > `4a` & `4aNb` > `4b`, 1, 0),
+    disj_4 = ifelse(`4aORb` < `4a` | `4aORb` < `4b`, 1, 0),
+    disj_4_double = ifelse(`4aORb` < `4a` & `4aORb` < `4b`, 1, 0),
+    
+    # pair 5
+    conj_5 = ifelse(`5aNb` > `5a` | `5aNb` > `5b` |
+                      `5aNnotb` > `5a` | `5bNnota` > `5b`, 1, 0),
+    conj_5_double = ifelse(`5aNb` > `5a` & `5aNb` > `5b`, 1, 0),
+    disj_5 = ifelse(`5aORb` < `5a` | `5aORb` < `5b`, 1, 0),
+    disj_5_double = ifelse(`5aORb` < `5a` & `5aORb` < `5b`, 1, 0),
+    
+    # pair 6
+    conj_6 = ifelse(`6aNb` > `6a` | `6aNb` > `6b` |
+                      `6aNnotb` > `6a` | `6bNnota` > `6b`, 1, 0),
+    conj_6_double = ifelse(`6aNb` > `6a` & `6aNb` > `6b`, 1, 0),
+    disj_6 = ifelse(`6aORb` < `6a` | `6aORb` < `6b`, 1, 0),
+    disj_6_double = ifelse(`6aORb` < `6a` & `6aORb` < `6b`, 1, 0),
+    
+    # pair 7
+    conj_7 = ifelse(`7aNb` > `7a` | `7aNb` > `7b` |
+                      `7aNnotb` > `7a` | `7bNnota` > `7b`, 1, 0),
+    conj_7_double = ifelse(`7aNb` > `7a` & `7aNb` > `7b`, 1, 0),
+    disj_7 = ifelse(`7aORb` < `7a` | `7aORb` < `7b`, 1, 0),
+    disj_7_double = ifelse(`7aORb` < `7a` & `7aORb` < `7b`, 1, 0),
+    
+    # pair 8
+    conj_8 = ifelse(`8aNb` > `8a` | `8aNb` > `8b` |
+                      `8aNnotb` > `8a` | `8bNnota` > `8b`, 1, 0),
+    conj_8_double = ifelse(`8aNb` > `8a` & `8aNb` > `8b`, 1, 0),
+    disj_8 = ifelse(`8aORb` < `8a` | `8aORb` < `8b`, 1, 0),
+    disj_8_double = ifelse(`8aORb` < `8a` & `8aORb` < `8b`, 1, 0)
+  ) |>
+  dplyr::select(id, 
+         `1a`, `1b`, `1aNb`, `1aORb`, `1aNnotb`,`1bNnota`, conj_1, disj_1, conj_1_double, disj_1_double,
+         `2a`, `2b`, `2aNb`, `2aORb`, `2aNnotb`,`2bNnota`, conj_2, disj_2, conj_2_double, disj_2_double,
+         `3a`, `3b`, `3aNb`, `3aORb`, `3aNnotb`,`3bNnota`, conj_3, disj_3, conj_3_double, disj_3_double,
+         `4a`, `4b`, `4aNb`, `4aORb`, `4aNnotb`,`4bNnota`, conj_4, disj_4, conj_4_double, disj_4_double,
+         `5a`, `5b`, `5aNb`, `5aORb`, `5aNnotb`,`5bNnota`, conj_5, disj_5, conj_5_double, disj_5_double,
+         `6a`, `6b`, `6aNb`, `6aORb`, `6aNnotb`,`6bNnota`, conj_6, disj_6, conj_6_double, disj_6_double,
+         `7a`, `7b`, `7aNb`, `7aORb`, `7aNnotb`,`7bNnota`, conj_7, disj_7, conj_7_double, disj_7_double,
+         `8a`, `8b`, `8aNb`, `8aORb`, `8aNnotb`,`8bNnota`, conj_8, disj_8, conj_8_double, disj_8_double)|>
   mutate(number_conj = conj_1 + conj_2+ conj_3+ conj_4+ conj_5+ conj_6+ conj_7+ conj_8,
-         number_disj = disj_1 + disj_2+ disj_3+ disj_4+ disj_5+ disj_6+ disj_7+ disj_8) |> 
+         number_disj = disj_1 + disj_2+ disj_3+ disj_4+ disj_5+ disj_6+ disj_7+ disj_8,
+         number_double_conj = conj_1_double + conj_2_double+ conj_3_double+ conj_4_double+ 
+           conj_5_double+ conj_6_double+ conj_7_double+ conj_8_double,
+         number_double_disj = disj_1_double + disj_2_double+ disj_3_double+ disj_4_double+ 
+           disj_5_double+ disj_6_double+ disj_7_double+ disj_8_double) |> 
   mutate(number_conj_disj = number_conj + number_disj)
 
 # combining the two data sets  --------------------------------------------
 
 data_d <- data_d |> 
-  select(id, z1_d, z2_d, z3_d, z4_d, z5_d, z6_d, d_average, sd_d,
+  dplyr::select(id, z1_d, z2_d, z3_d, z4_d, z5_d, z6_d, d_average, sd_d,
          x1_average, x2_average,x_average, sd_x)
 
 d_conj_disj_combined <- data_join_conj_disj |>
