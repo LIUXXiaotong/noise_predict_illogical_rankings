@@ -18,7 +18,7 @@ if (!requireNamespace("pacman", quietly = TRUE)) {
   install.packages("pacman")
 } 
 library("pacman")
-p_load(tidyverse, here, GGally, ppcor, lme4, lmtest)
+p_load(tidyverse, here, GGally, ppcor, lme4, lmtest, patchwork)
 
 ## read-in data 
 #if the data cannot be read, try df_noise_conjdisj <- read.csv(here::here("data",
@@ -56,7 +56,7 @@ df_HMT <- read.csv(here::here("data_and_analysis", "data",
   dplyr::select(id, HMT_score = no_correct) |>  
   dplyr::filter(id %in% df_ranking$id)
 
-#creating a sub-directory for saving the plots 
+#creating a sub-directory for saving the plots
 plots_dir <- file.path(getwd(), "plots")
 if (!dir.exists(plots_dir)) dir.create(plots_dir, recursive = TRUE)
 ```
@@ -173,7 +173,13 @@ aggregated_noise_illogical <- df_ranking_aggregated |>
          #number_disj,
          sum_illogical,
          number_conj_disj,
-         get_logic) #125 participants 
+         get_logic,
+         z1_d,
+         z2_d,
+         z3_d,
+         z4_d,
+         z5_d,
+         z6_d) #125 participants 
 
 #descriptive statistics 
 ( summary_table <- aggregated_noise_illogical |>
@@ -187,6 +193,19 @@ aggregated_noise_illogical <- df_ranking_aggregated |>
             .names = "{.col}_{.fn}")) |>
   mutate(across(everything(), ~round(.x, 2))))
 
+#illogical rankings grouped by event-set condition 
+df_ranking_by_condition <- df_ranking |> 
+  group_by(id, condition) |> 
+  mutate(number_logical = sum(logical_pass)) |> 
+  dplyr::select(id, condition, number_logical) |> 
+  unique()
+
+summary_table2 <- df_ranking_by_condition |> 
+  group_by(condition) |> 
+  summarise(mean_no_logical = mean(number_logical),
+            sd_no_logical = sd(number_logical))
+
+summary_table2
 ```
 
 ```{r}
@@ -433,7 +452,7 @@ noise_illogical_WMC_Gf_aggregated <- aggregated_noise_illogical  |>
   left_join(WMC_HMT , by = "id")  |> 
   ungroup() |> 
   dplyr::select(id, d_average, WMC_composite, HMT_score, sum_illogical, 
-                number_conj_disj, get_logic) |> 
+                number_conj_disj, get_logic, z1_d, z2_d, z3_d, z4_d, z5_d, z6_d) |> 
   drop_na() #69 participants 
 
 ( summary_table2 <- noise_illogical_WMC_Gf_aggregated |>
@@ -627,5 +646,107 @@ noise_illogical_WMC_Gf_aggregated |>
 
 
 t.test(HMT_score ~ get_logic, data = noise_illogical_WMC_Gf_aggregated)
+
+```
+
+**Exploratory analysis**: Correlate each probabilistic expression with WMC and Gf scores
+
+Correlating each probabilistic expression with WMC：
+
+```{r}
+r_label <- function(x, y, italic = TRUE) {
+  test  <- cor.test(x, y)
+  r     <- unname(test$estimate)
+  p     <- test$p.value
+  stars <- if (p < .001) "***" else
+    if (p < .01) "**" else
+      if (p < .05) "*" else
+        if (p < .10) "." else ""
+  
+  r_txt <- sub("^(-?)0\\.", "\\1.", sprintf("%.2f", r))
+  
+  if (italic) paste0("italic(r)~'= ", r_txt, stars, "'")
+  else        paste0("r = ", r_txt, stars)
+}
+
+wmc_z <- function(var, data, xvar = "WMC_composite",
+                  xlab = "WMC Score") {
+  
+  lab <- r_label(data[[xvar]], data[[var]])
+  zname <- toupper(sub("_d$", "", var))
+  
+  ggplot(data, aes(x = .data[[xvar]], y = .data[[var]])) +
+    geom_point(alpha = 0.6, size = 1) +
+    geom_smooth(method = "lm", se = TRUE,
+                color = "#2297E6", fill = "#2297E6", alpha = 0.1) +
+    annotate("text",
+             x = -Inf, y = 0.7, hjust = -0.2, vjust = 1.5,
+             label = r_label(data[[xvar]], data[[var]]),
+             parse = TRUE,
+             size = 3.5, color = "#D55E00", fontface = "bold") +
+    scale_y_continuous(expand = expansion(mult = c(0.05, 0.15))) +
+    labs(x = xlab,
+         y = paste(zname, "Value"))+
+    theme_bw(base_size = 10) +
+    theme(plot.title = element_text(hjust = 0.5, size = 11, face = "bold"),
+          axis.text = element_text(size = 9))
+}
+
+plots_wmc <- lapply(c("z1_d", "z2_d", "z3_d", 
+                  "z4_d", "z5_d", "z6_d"), wmc_z, 
+                data = noise_illogical_WMC_Gf_aggregated)
+
+names(plots_wmc) <- c("z1_d", "z2_d", "z3_d", 
+                  "z4_d", "z5_d", "z6_d")
+
+p_wmc <- wrap_plots(plots_wmc[paste0("z", 1:6, "_d")], ncol = 3)
+```
+
+Correlating each probabilistic expression with Gf Score：
+
+```{r}
+Gf_z <- function(var, data, xvar = "HMT_score",
+                  xlab = "Gf Score") {
+  
+  lab <- r_label(data[[xvar]], data[[var]])
+  zname <- toupper(sub("_d$", "", var))
+  
+  ggplot(data, aes(x = .data[[xvar]], y = .data[[var]])) +
+    geom_point(alpha = 0.6, size = 1) +
+    geom_smooth(method = "lm", se = TRUE,
+                color = "#2297E6", fill = "#2297E6", alpha = 0.1) +
+    annotate("text",
+             x = -Inf, y = Inf, hjust = -0.2, vjust = 1.5,
+             label = r_label(data[[xvar]], data[[var]]),
+             parse = TRUE,
+             size = 3.5, color = "#D55E00", fontface = "bold") +
+    scale_y_continuous(expand = expansion(mult = c(0.05, 0.15))) +
+    labs(x = xlab,
+         y = paste(zname, "Value"))+
+    theme_bw(base_size = 10) +
+    theme(plot.title = element_text(hjust = 0.5, size = 11, face = "bold"),
+          axis.text = element_text(size = 9))
+}
+
+plots_Gf <- lapply(c("z1_d", "z2_d", "z3_d", 
+                      "z4_d", "z5_d", "z6_d"), Gf_z, 
+                    data = noise_illogical_WMC_Gf_aggregated)
+
+names(plots_Gf) <- c("z1_d", "z2_d", "z3_d", 
+                      "z4_d", "z5_d", "z6_d")
+
+p_gf  <- wrap_plots(plots_Gf[paste0("z", 1:6, "_d")],  ncol = 3)
+
+(wrap_elements(p_wmc) / wrap_elements(p_gf)) +
+  plot_annotation(tag_levels = "A") &
+  theme(plot.tag = element_text(face = "bold", size = 12))
+
+ggsave("z1_6_wmc_gf.pdf", width = 7, height = 7)
+
+```
+
+**Exploratory analysis**: double conjunction fallacy
+
+```{r}
 
 ```
