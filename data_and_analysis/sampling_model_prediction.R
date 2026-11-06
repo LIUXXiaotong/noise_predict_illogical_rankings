@@ -1,7 +1,7 @@
 library(ggplot2)
 
 # Create the "plot" sub-folder for the saved figures (does nothing if it exists)
-dir.create("plot", showWarnings = FALSE)
+dir.create("plots", showWarnings = FALSE)
 
 # Colours ---------------------------------------------------------------------
 # Figure 1: navy -> teal -> mint (dark = d of 0, light = d of 0.5)
@@ -37,7 +37,6 @@ fig1 <- ggplot(fig1_data, aes(x = P, y = E, colour = d, group = d)) +
                      labels = c("0.00", "0.25", "0.50", "0.75", "1.00")) +
   coord_equal() +               # square plotting area
   labs(
-    title  = "Effect of d on Expected Value of Probability Estimates",
     x      = "P(A)",
     y      = expression(E(hat(P)(A))),
     colour = "d"
@@ -56,9 +55,8 @@ fig1 <- ggplot(fig1_data, aes(x = P, y = E, colour = d, group = d)) +
 
 # Step 3: save
 # width and height are in inches
-ggsave("plot/fig1_effect_of_d.pdf", fig1, width = 5, height = 4)
-ggsave("plot/fig1_effect_of_d.png", fig1, width = 5, height = 4, dpi = 300, bg = "white")
-
+ggsave("plots/effect_of_d.pdf", fig1, width = 5, height = 4)
+#ggsave("plots/effect_of_d.png", fig1, width = 5, height = 4, dpi = 300, bg = "white")
 
 # =============================================================================
 # Figure 2:  E[P_hat(A)] = 2 * alpha * P(A) + 1/2 + b - alpha
@@ -124,7 +122,6 @@ fig2 <- ggplot(fig2_data, aes(x = P, y = E)) +
   # clip = "off" lets the value labels sit outside the panels
   coord_cartesian(xlim = c(0, 1), ylim = c(-0.3, 1.3), clip = "off") +
   labs(
-    title  = "Quantum Sequential Sampler",
     x      = "P(A)",
     y      = expression(E*"["*hat(P)(A)*"]"),
     colour = expression(alpha)
@@ -144,7 +141,9 @@ fig2 <- ggplot(fig2_data, aes(x = P, y = E)) +
     legend.box.spacing  = unit(1.5, "cm")
   )
 
+fig2
+
 # Step 3: save
 # width and height are in inches
-ggsave("plot/fig2_quantum_sampler.pdf", fig2, width = 8, height = 3.6)
-ggsave("plot/fig2_quantum_sampler.png", fig2, width = 8, height = 3.6, dpi = 300, bg = "white")
+ggsave("plots/quantum_sequential_sampler.pdf", fig2, width = 8, height = 3.6)
+#ggsave("plots/quantum_sequential_sampler.png", fig2, width = 8, height = 3.6, dpi = 300, bg = "white")
